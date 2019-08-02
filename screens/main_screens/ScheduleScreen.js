@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { MonoText } from '../components/StyledText';
+import { MonoText } from '../../components/StyledText';
 
 export default function ScheduleScreen() {
   return (

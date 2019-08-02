@@ -3,23 +3,19 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
+import FloatingButton from '../../components/FloatingButton';
 
-export default function HelpScreen() {
+export default function HistoryScreen() {
   return (
     <View style={styles.container}>
-
+      <FloatingButton/>
     </View>
   );
 }
 
-HelpScreen.navigationOptions = {
-  header: null,
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: '#fff',
   },
 });

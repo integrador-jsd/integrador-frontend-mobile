@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import ScheduleScreen from '../screens/ScheduleScreen';
-import HelpScreen from '../screens/HelpScreen';
+import HomeScreen from '../screens/main_screens/HomeScreen';
+import ScheduleScreen from '../screens/main_screens/ScheduleScreen';
+import RequestScreen from '../screens/main_screens/RequestScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -15,6 +15,7 @@ const config = Platform.select({
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
+
   },
   config
 );
@@ -51,27 +52,28 @@ ScheduleStack.navigationOptions = {
 
 ScheduleStack.path = '';
 
-const HelpStack = createStackNavigator(
+const RequestStack = createStackNavigator(
   {
-    Help: HelpScreen,
+    Request: RequestScreen,
   },
   config
 );
 
-HelpStack.navigationOptions = {
-  tabBarLabel: 'Ayuda',
+RequestStack.navigationOptions = {
+  tabBarLabel: 'Solicitudes',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
   ),
 };
 
-HelpStack.path = '';
+RequestStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   ScheduleStack,
-  HelpStack,
+  RequestStack,
 });
+
 
 tabNavigator.path = '';
 
