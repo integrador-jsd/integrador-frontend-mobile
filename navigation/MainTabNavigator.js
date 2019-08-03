@@ -9,7 +9,6 @@ import RequestScreen from '../screens/main_screens/RequestScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
-  default: {},
 });
 
 const HomeStack = createStackNavigator(
@@ -56,7 +55,7 @@ const RequestStack = createStackNavigator(
   {
     Request: RequestScreen,
   },
-  config
+  config,
 );
 
 RequestStack.navigationOptions = {
@@ -73,7 +72,6 @@ const tabNavigator = createBottomTabNavigator({
   ScheduleStack,
   RequestStack,
 });
-
 
 tabNavigator.path = '';
 

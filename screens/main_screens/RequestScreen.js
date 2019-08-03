@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import {FloatingAction} from 'react-native-floating-action';
 import { StyleSheet, View, Image, TouchableOpacity, Alert } from 'react-native';
 
@@ -8,10 +8,8 @@ import TabBarIcon from '../../components/TabBarIcon';
 import ActiveScreen from '../request_screens/ActiveScreen';
 import HistoryScreen from '../request_screens/HistoryScreen';
 
-
 const config = Platform.select({
-  web: { headerMode: 'screen' },
-  android: {headerMode: 'screen'},
+  web: {headerMode: 'screen'},
 });
 
 
@@ -23,17 +21,7 @@ const ActiveStack = createStackNavigator(
 );
 
 ActiveStack.navigationOptions = {
-  tabBarLabel: 'Activas',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+  tabBarLabel: 'Activas'
 };
 
 ActiveStack.path = '';
@@ -46,17 +34,7 @@ const HistoryStack = createStackNavigator(
 );
 
 HistoryStack.navigationOptions = {
-  tabBarLabel: 'Historial',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+  tabBarLabel: 'Historial'
 };
 
 HistoryStack.path = '';
@@ -69,7 +47,7 @@ const tabNavigator = createMaterialTopTabNavigator({
 
 tabNavigator.path = '';
 tabNavigator.navigationOptions = {
-  header: null
+  header: null,
 };
 
 export default tabNavigator;

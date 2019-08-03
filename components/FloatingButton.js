@@ -8,7 +8,6 @@ export default class FloatingButton extends Component {
     return (
       <View style={styles.container}>
         <ActionButton buttonColor="rgba(0,0,255,1)">
-
           <ActionButton.Item
             title="Atención en el aula"
             style={styles.actionButtonIcon}
@@ -37,11 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
   },
   actionButtonIcon: {
     width: 33,
