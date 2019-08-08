@@ -5,49 +5,41 @@ import {FloatingAction} from 'react-native-floating-action';
 import { StyleSheet, View, Image, TouchableOpacity, Alert } from 'react-native';
 
 import TabBarIcon from '../../components/TabBarIcon';
-import ActiveScreen from '../request_screens/ActiveScreen';
+import ActiveScreen from '../request_screens/RequestManager';
 import HistoryScreen from '../request_screens/HistoryScreen';
 
-const config = Platform.select({
-  web: {headerMode: 'screen'},
+
+const ActiveStack = createStackNavigator({
+  Active: ActiveScreen,
 });
 
-
-const ActiveStack = createStackNavigator(
-  {
-    Active: ActiveScreen,
-  },
-  config
-);
-
 ActiveStack.navigationOptions = {
-  tabBarLabel: 'Activas'
+  title: 'Activo'
 };
 
-ActiveStack.path = '';
-
-const HistoryStack = createStackNavigator(
-  {
-    History: HistoryScreen,
-  },
-  config
-);
+const HistoryStack = createStackNavigator({
+  History: HistoryScreen
+});
 
 HistoryStack.navigationOptions = {
-  tabBarLabel: 'Historial'
+  title:'Historial',
 };
-
-HistoryStack.path = '';
-
 
 const tabNavigator = createMaterialTopTabNavigator({
   ActiveStack,
   HistoryStack,
+},
+{tabBarOptions: {
+  style: {
+    backgroundColor: 'rgb(0,0,255)',
+  },
+}
 });
 
 tabNavigator.path = '';
 tabNavigator.navigationOptions = {
-  header: null,
+  header:null,
 };
+tabNavigator.tabBarOptions
 
 export default tabNavigator;

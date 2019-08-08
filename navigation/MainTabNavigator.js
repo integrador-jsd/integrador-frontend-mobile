@@ -7,6 +7,7 @@ import HomeScreen from '../screens/main_screens/HomeScreen';
 import ScheduleScreen from '../screens/main_screens/ScheduleScreen';
 import RequestScreen from '../screens/main_screens/RequestScreen';
 
+
 const config = Platform.select({
   web: { headerMode: 'screen' },
 });
@@ -72,6 +73,10 @@ const tabNavigator = createBottomTabNavigator({
   ScheduleStack,
   RequestStack,
 });
+
+tabNavigator.navigationOptions = {
+  header:null,
+}
 
 tabNavigator.path = '';
 

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import FloatingButton from '../../components/FloatingButton';
 
 export default function HistoryScreen(){
     return (
