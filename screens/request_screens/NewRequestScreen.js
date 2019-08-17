@@ -1,138 +1,71 @@
 import React, {Component} from 'react';
-import { Modal, View,  StyleSheet,  Text,  Picker,  TouchableHighlight, Alert, TextInput } from 'react-native';
-import DatePicker from 'react-native-datepicker'
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Modal, View,  StyleSheet,  Text,  TouchableHighlight, Alert, FlatList } from 'react-native';
+import Card from '../../components/Card';
+import Picker from '../../components/Picker';
+import DatePicker from '../../components/DatePicker';
 
-class NewRequestScreen extends Component<{}>{
+class NewRequestScreen extends React.PureComponent{
   constructor(props){
     super(props)
 
-    this.state = {newDate:'',
-     currentDate:'',
-      startTime: '',
-       endTime: '',}
+    this.state = {
+        items: [],
+      }
 
 
   }
 
   componentDidMount() {
-    that = this;
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    // var sec = new Date().getSeconds(); //Current Seconds
-
-    that.setState({
-      newDate: date + '/' + month + '/' + year,
-      currentDate: date + '/' + month + '/' + year,
-      endTime: hours+'/'+min,
-      startTime: hours+'/'+min,
+    const url = 'https://jsonplaceholder.typicode.com/users';
+    fetch(url)
+    .then((response) => response.json())
+    .then((responseJson) => {
+       this.setState({items: responseJson})
+    })
+    .catch((error) => {
+        console.log(error)
     });
 
   }
 
+
   render(){
     return (
-      <Modal
-        onRequestClose={() => {
-          this.props.navigation.goBack();
-        }}>
+      // <Modal
+      //   onRequestClose={() => {
+      //     this.props.navigation.goBack();
+      //   }}>
         <View style = {styles.container}>
             <Text style={styles.header}>Nueva solicitud</Text>
             <View style = {styles.rows}>
               <Text style={styles.text}>Elija una fecha: </Text>
-              <DatePicker
-                style={styles.datepicker}
-                date={this.state.newDate}
-                mode="date"
-                placeholder="Ingrese la fecha"
-                format="DD-MM-YYYY"
-                minDate= {this.state.currentDate}
-                confirmBtnText="Confirmar"
-                cancelBtnText="Cancelar"
-                iconSource = {require('../../assets/images/calendar.png')}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 5,
-                    top: 4,
-                    marginLeft: 0,
-                    marginRight: 3,
-                  },
-                  dateInput: {
-                    alignItems: 'flex-end',
-                    paddingRight: 20,
-                    borderColor: '#335D3C',
-                  },
-                  alignSelf: 'center',
-                }}
-                onDateChange={(date) => {this.setState({newDate: date})}}
-              >
-              </DatePicker>
+              <DatePicker mode={'date'} format = {'DD-MM-YYYY'}/>
             </View>
             <View style = {styles.rows}>
               <Text style={styles.text}>Hora inicial: </Text>
-              <DatePicker
-                style={styles.datepicker}
-                date={this.state.startTime}
-                mode="time"
-                is24Hour = {true}
-                display = "default"
-                format="HH:mm"
-                confirmBtnText="Confirmar"
-                cancelBtnText="Cancelar"
-                iconSource = {require('../../assets/images/clock.png')}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 5,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    alignItems: 'flex-end',
-                    paddingRight: 45,
-                    borderColor: '#335D3C',
-                  }
-                }}
-                onDateChange={(date) => {this.setState({startTime: date})}}
-              >
-              </DatePicker>
+              <DatePicker mode={'time'} format = {'HH:mm'}/>
             </View>
             <View style = {styles.rows}>
               <Text style={styles.text}>Hora final:  </Text>
-              <DatePicker
-                style={styles.datepicker}
-                date={this.state.endTime}
-                mode="time"
-                is24Hour = {true}
-                display = "default"
-                format="HH:mm"
-                confirmBtnText="Confirmar"
-                cancelBtnText="Cancelar"
-                iconSource = {require('../../assets/images/clock.png')}
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 5,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    alignItems: 'flex-end',
-                    paddingRight: 45,
-                    borderColor: '#335D3C',
-                  },
-                }}
-                onDateChange={(date) => {this.setState({endTime: date})}}
-              >
-              </DatePicker>
+              <DatePicker mode={'time'} format = {'HH:mm'}/>
+            </View>
+            <View style= {[styles.rows, {marginRight:'2%', marginTop:10}]}>
+              <Picker message={'Custom'} />
+              <Picker message={'Custom'}/>
+              <Picker message={'Custom'}/>
+            </View>
+            <View style={[styles.container,{borderTopColor:'black', borderTopWidth : 2, marginTop:15 }]} >
+              <FlatList
+                style={{marginTop:1}}
+                data={this.state.items}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item}) => <Card item={item}/>}
+                />
             </View>
         </View>
-      </Modal>
+
+
+      // </Modal>
     );
   }
 }
@@ -160,18 +93,6 @@ const styles = StyleSheet.create({
     color: '#335D3C',
     marginBottom: 20,
     marginTop: 10,
-  },
-  textinput: {
-    alignSelf: 'stretch',
-    height: 40,
-    marginBottom:40,
-    borderBottomColor: '#335D3C',
-    borderBottomWidth:1,
-  },
-  datepicker: {
-    width: 150,
-    marginLeft: 10,
-    alignItems: 'flex-end',
   },
   text: {
     flex: 0.8,

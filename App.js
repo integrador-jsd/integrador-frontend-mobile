@@ -7,11 +7,11 @@ import NewRequestScreen from './screens/request_screens/NewRequestScreen';
 
 
 const App = createStackNavigator({
-  MainTab: {screen: MainTabNavigator},
+  //MainTab: {screen: MainTabNavigator},
   NewRequest: {screen: NewRequestScreen},
 },
 {
-  initialRouteName: 'MainTab',
+  initialRouteName: 'NewRequest',
 });
 
 const styles = StyleSheet.create({
