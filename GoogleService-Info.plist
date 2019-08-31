@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>553884378564-fns5km5i57u3fge25d1j7nsdhdhclnce.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.553884378564-fns5km5i57u3fge25d1j7nsdhdhclnce</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDbYTD0vJOeaVR1qkyd-GHaQ40vSd951QA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>553884378564</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>udea.edu.co.integrador</string>
+	<key>PROJECT_ID</key>
+	<string>integrador-jsd</string>
+	<key>STORAGE_BUCKET</key>
+	<string>integrador-jsd.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:553884378564:ios:e3bf410d16e131fa</string>
+	<key>DATABASE_URL</key>
+	<string>https://integrador-jsd.firebaseio.com</string>
+</dict>
+</plist>

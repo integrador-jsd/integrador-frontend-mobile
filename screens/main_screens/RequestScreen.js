@@ -1,20 +1,23 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import {createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import {FloatingAction} from 'react-native-floating-action';
 import { StyleSheet, View, Image, TouchableOpacity, Alert } from 'react-native';
+import * as Font from 'expo-font';
+import { AppLoading } from 'expo';
 
-import TabBarIcon from '../../components/TabBarIcon';
 import ActiveScreen from '../request_screens/RequestManager';
 import HistoryScreen from '../request_screens/HistoryScreen';
+import Colors from '../../constants/Colors';
 
+Font.loadAsync({
+  RalewayRegular: require('../../assets/fonts/Raleway-SemiBold.ttf'),
+});
 
 const ActiveStack = createStackNavigator({
   Active: ActiveScreen,
 });
 
 ActiveStack.navigationOptions = {
-  title: 'Activo'
+  title: 'Activas',
 };
 
 const HistoryStack = createStackNavigator({
@@ -31,15 +34,20 @@ const tabNavigator = createMaterialTopTabNavigator({
 },
 {tabBarOptions: {
   style: {
-    backgroundColor: 'rgb(0,0,255)',
+    backgroundColor: Colors.primaryColor,
   },
+  labelStyle: {
+    fontSize: 17,
+    fontFamily: 'RalewayRegular',
+  },
+  upperCaseLabel: false,
 }
 });
 
 tabNavigator.path = '';
 tabNavigator.navigationOptions = {
   header:null,
-};
-tabNavigator.tabBarOptions
+}
+
 
 export default tabNavigator;

@@ -1,12 +1,13 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Image } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/main_screens/HomeScreen';
 import ScheduleScreen from '../screens/main_screens/ScheduleScreen';
 import RequestScreen from '../screens/main_screens/RequestScreen';
-
+import Colors from '../constants/Colors';
+import * as Font from 'expo-font';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -23,14 +24,7 @@ const HomeStack = createStackNavigator(
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
+    <Image focused={focused} style={{ width: 25, height: 25 }} source={require('../assets/images/home.png')} />
   ),
 };
 
@@ -46,7 +40,8 @@ const ScheduleStack = createStackNavigator(
 ScheduleStack.navigationOptions = {
   tabBarLabel: 'Horario',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+    <Image focused={focused} style={{ width: 25, height: 25 }} source={require('../assets/images/schedule.png')} />
+
   ),
 };
 
@@ -62,7 +57,7 @@ const RequestStack = createStackNavigator(
 RequestStack.navigationOptions = {
   tabBarLabel: 'Solicitudes',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
+    <Image focused={focused} style={{ width: 25, height: 25 }} source={require('../assets/images/request.png')} />
   ),
 };
 
@@ -72,7 +67,18 @@ const tabNavigator = createBottomTabNavigator({
   HomeStack,
   ScheduleStack,
   RequestStack,
-});
+},
+{
+  initialRouteName: 'ScheduleStack',
+  tabBarOptions: {
+    labelStyle: {
+      fontSize: 12,
+    },
+    activeTintColor: Colors.secondaryColor,
+    inactiveTintColor: Colors.primaryColor,
+  },
+}
+);
 
 tabNavigator.navigationOptions = {
   header:null,

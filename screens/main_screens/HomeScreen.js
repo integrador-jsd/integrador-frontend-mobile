@@ -13,7 +13,6 @@ import {
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text> Hola </Text>
     </View>
   );
 }

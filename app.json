@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Home",
+    "name": "UdeAulas",
     "icon": "./assets/images/sos.png",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "slug": "integrador",
     "privacy": "public",
     "sdkVersion": "33.0.0",

@@ -11,8 +11,7 @@ class DatePickers extends Component {
 
     this.state = {newDate:'',
      currentDate:'',
-      startTime: '',
-       endTime: '',
+      time: '',
       }
 
   }
@@ -29,44 +28,70 @@ class DatePickers extends Component {
     this.setState({
       newDate: date + '/' + month + '/' + year,
       currentDate: date + '/' + month + '/' + year,
-      endTime: hours+'/'+min,
-      startTime: hours+'/'+min,
+      time: hours+'/'+min,
     });
 
   }
 
    render() {
-
-      return (
-      <DatePicker
-        style={styles.datepicker}
-        date={this.state.newDate}
-        mode={this.props.mode}
-        placeholder="Ingrese la fecha"
-        format={this.props.format}
-        minDate= {this.state.currentDate}
-        confirmBtnText="Confirmar"
-        cancelBtnText="Cancelar"
-        iconSource = {require('../assets/images/calendar.png')}
-        customStyles={{
-          dateIcon: {
-            position: 'absolute',
-            left: 5,
-            top: 4,
-            marginLeft: 0,
-            marginRight: 3,
-          },
-          dateInput: {
-            alignItems: 'center',
-            paddingLeft: 20,
-            borderColor: '#335D3C',
-          },
-          alignSelf: 'center',
-        }}
-        onDateChange={(date) => {this.setState({newDate: date})}}
-      />
-
-      )
+     if(this.props.mode == 'date'){
+       return (
+         <DatePicker
+           style={styles.datepicker}
+           date={this.state.newDate}
+           mode={this.props.mode}
+           format={this.props.format}
+           minDate= {this.state.currentDate}
+           confirmBtnText="Confirmar"
+           cancelBtnText="Cancelar"
+           iconSource = {require('../assets/images/calendar.png')}
+           customStyles={{
+             dateIcon: {
+               position: 'absolute',
+               left: 5,
+               top: 4,
+               marginLeft: 0,
+               marginRight: 3,
+             },
+             dateInput: {
+               alignItems: 'center',
+               paddingLeft: 20,
+               borderColor: '#335D3C',
+             },
+             alignSelf: 'center',
+           }}
+           onDateChange={(date) => {this.setState({newDate: date})}}
+         />
+       );
+     }else{
+       return(
+         <DatePicker
+           style={styles.datepicker}
+           date={this.state.time}
+           mode={this.props.mode}
+           format={this.props.format}
+           confirmBtnText="Confirmar"
+           cancelBtnText="Cancelar"
+           iconSource = {require('../assets/images/clock.png')}
+           customStyles={{
+             dateIcon: {
+               position: 'absolute',
+               left: 5,
+               top: 4,
+               marginLeft: 0,
+               marginRight: 3,
+             },
+             dateInput: {
+               alignItems: 'center',
+               paddingLeft: 20,
+               borderColor: '#335D3C',
+             },
+             alignSelf: 'center',
+           }}
+           onDateChange={(date) => {this.setState({time: date})}}
+         />
+       );
+     }
    }
 }
 
