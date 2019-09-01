@@ -3,17 +3,21 @@ import {createStackNavigator, createAppContainer} from 'react-navigation';
 import { StyleSheet, View, Navigator} from 'react-native';
 import MainTabNavigator from './navigation/MainTabNavigator';
 import NewRequestScreen from './screens/request_screens/NewRequestScreen';
-import Login from './screens/LoginScreen';
+import LoginScreen from './screens/LoginScreen';
+import SplashScreen from './screens/SplashScreen';
 
 
 
 const App = createStackNavigator({
-  //MainTab: {screen: MainTabNavigator},
-  //NewRequest: {screen: NewRequestScreen},
-  Login: {screen: Login},
+  MainTab: {screen: MainTabNavigator},
+  NewRequest: {screen: NewRequestScreen},
+  Login: {screen: LoginScreen},
+  Splash: {screen: SplashScreen},
+
 },
+
 {
-  initialRouteName: 'Login',
+  initialRouteName: 'Splash',
 });
 
 const styles = StyleSheet.create({
