@@ -25,8 +25,10 @@ export default class ScheduleScreen extends Component {
       'RalewaySemiBold': require('../../assets/fonts/Raleway-SemiBold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
     });
-    this.setState({ fontLoaded: true });
 
+    this.loadSchedule();
+
+    this.setState({ fontLoaded: true });
 
     var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
@@ -37,7 +39,9 @@ export default class ScheduleScreen extends Component {
     });
 
 
-    this.loadSchedule();
+
+
+
 
 
 

@@ -3,6 +3,7 @@ import {
   View, Text, StyleSheet, ActivityIndicator
 } from 'react-native';
 import firebase from 'firebase';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 
 
@@ -16,9 +17,17 @@ class SplashScreen extends React.Component {
   checkIfLoggedIn = () => {
     firebase.auth().onAuthStateChanged(function(user) {
       if(user){
-        this.props.navigation.navigate('MainTab');
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'MainTab' })],
+        });
+        this.props.navigation.dispatch(resetAction);
       }else{
-        this.props.navigation.navigate('Login');
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Login' })],
+        });
+        this.props.navigation.dispatch(resetAction);
       }
     }.bind(this));
   }

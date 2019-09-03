@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Alert, Button
+  View, Text, StyleSheet, Alert, Button, ActivityIndicator,
 } from 'react-native';
 import * as Expo from 'expo';
 import firebase from 'firebase';
@@ -10,19 +10,26 @@ firebase.initializeApp(firebaseConfig);
 
 export default class LoginScreen extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      entering:false,
+    };
+  }
+
   isUserEqual = (googleUser, firebaseUser) => {
-  if (firebaseUser) {
-    var providerData = firebaseUser.providerData;
-    for (var i = 0; i < providerData.length; i++) {
-      if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
-          providerData[i].uid === googleUser.getBasicProfile().getId()) {
-        // We don't need to reauth the Firebase connection.
-        return true;
+    if (firebaseUser) {
+      var providerData = firebaseUser.providerData;
+      for (var i = 0; i < providerData.length; i++) {
+        if (providerData[i].providerId === firebase.auth.GoogleAuthProvider.PROVIDER_ID &&
+            providerData[i].uid === googleUser.getBasicProfile().getId()) {
+          // We don't need to reauth the Firebase connection.
+          return true;
+        }
       }
     }
+    return false;
   }
-  return false;
-}
 
   onSignIn = googleUser => {
   console.log('Google Auth Response', googleUser);
@@ -36,7 +43,7 @@ export default class LoginScreen extends React.Component {
         googleUser.idToken,
         googleUser.accessToken
       );
-      firebase.auth().signInWithCredential(credential).then(function(){
+      firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function(){
         console.console.log('user signed in');
       }).catch(function(error) {
         // Handle Errors here.
@@ -55,6 +62,9 @@ export default class LoginScreen extends React.Component {
 }
 
   signInWithGoogleAsync = async () => {
+    this.setState({
+      entering: true
+    });
     try {
       const result = await Expo.Google.logInAsync({
         androidClientId: '553884378564-le9276vg4q3adfhlr4ss3hktgols45tm.apps.googleusercontent.com',
@@ -66,18 +76,33 @@ export default class LoginScreen extends React.Component {
         this.onSignIn(result);
         return result.accessToken;
       } else {
+        this.setState({
+          entering: false,
+        });
         return { cancelled: true };
       }
     } catch (e) {
+      this.setState({
+        entering: false,
+      });
       return { error: true };
     }
   }
   render() {
-    return(
-      <View style = {styles.container}>
-        <Button title='Entrar' onPress={()=> this.signInWithGoogleAsync()}/>
-      </View>
-    );
+    if(!this.state.entering){
+      return(
+        <View style = {styles.container}>
+          <Button title='Entrar' onPress={()=> this.signInWithGoogleAsync()}/>
+        </View>
+      );
+    }else{
+      return(
+        <View style = {styles.container}>
+          <ActivityIndicator size="large"/>
+        </View>
+      );
+    }
+
   }
 }
 
