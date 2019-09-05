@@ -1,10 +1,12 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Alert, Button, ActivityIndicator,
+  View, Text, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity,
 } from 'react-native';
 import * as Expo from 'expo';
 import firebase from 'firebase';
 import firebaseConfig from './config';
+import Colors from '../constants/Colors';
+import * as Font from 'expo-font';
 firebase.initializeApp(firebaseConfig);
 
 
@@ -15,6 +17,12 @@ export default class LoginScreen extends React.Component {
     this.state = {
       entering:false,
     };
+  }
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      'RalewayRegular': require('../assets/fonts/Raleway-Regular.ttf'),
+    });
   }
 
   isUserEqual = (googleUser, firebaseUser) => {
@@ -72,14 +80,14 @@ export default class LoginScreen extends React.Component {
         scopes: ['profile', 'email'],
       });
 
-      if (result.type === 'success') {
+      if (result.type === 'success' && ((result.user.email).indexOf("@udea.edu.co") > -1)) {
         this.onSignIn(result);
         return result.accessToken;
       } else {
+        Alert.alert('Solo se pueden dominios del tipo @udea.edu.co');
         this.setState({
           entering: false,
         });
-        return { cancelled: true };
       }
     } catch (e) {
       this.setState({
@@ -92,13 +100,21 @@ export default class LoginScreen extends React.Component {
     if(!this.state.entering){
       return(
         <View style = {styles.container}>
-          <Button title='Entrar' onPress={()=> this.signInWithGoogleAsync()}/>
+          <TouchableOpacity style={styles.googleStyle} activeOpacity={0.5}
+            onPress={this.signInWithGoogleAsync}>
+           <Image
+            source={require('../assets/images/google.png')}
+            style={styles.imageIconStyle}/>
+           <View style={styles.separatorLine} />
+           <Text style={styles.textStyle}> Entrar usando Google </Text>
+
+         </TouchableOpacity>
         </View>
       );
     }else{
       return(
         <View style = {styles.container}>
-          <ActivityIndicator size="large"/>
+          <ActivityIndicator size="large" color = "#fff" />
         </View>
       );
     }
@@ -116,6 +132,33 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems:'center',
     justifyContent: 'center',
-    backgroundColor: '#rgb(255,255,255)',
+    backgroundColor: Colors.secondaryColor,
   },
+  googleStyle: {
+   flexDirection: 'row',
+   alignItems: 'center',
+   backgroundColor: Colors.primaryColor,
+   borderWidth: .5,
+   borderColor: '#fff',
+   height: 40,
+   borderRadius: 5 ,
+   margin: 5,
+ },
+ separatorLine :{
+  backgroundColor : Colors.secondaryColor,
+  width: 1,
+  height: 40
+},
+imageIconStyle: {
+   padding: 10,
+   margin: 5,
+   height: 25,
+   width: 25,
+   resizeMode : 'stretch',
+},
+textStyle: {
+  fontFamily: 'RalewayRegular',
+  color: Colors.whiteColor,
+}
+
 });

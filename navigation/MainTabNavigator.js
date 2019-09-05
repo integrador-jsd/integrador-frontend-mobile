@@ -69,7 +69,7 @@ const tabNavigator = createBottomTabNavigator({
   RequestStack,
 },
 {
-  initialRouteName: 'ScheduleStack',
+  initialRouteName: 'ProfileStack',
   tabBarOptions: {
     labelStyle: {
       fontSize: 12,
