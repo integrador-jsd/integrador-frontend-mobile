@@ -25,7 +25,6 @@ export default class ScheduleScreen extends Component {
       'RalewaySemiBold': require('../../assets/fonts/Raleway-SemiBold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
     });
-
     this.loadSchedule();
 
     this.setState({ fontLoaded: true });

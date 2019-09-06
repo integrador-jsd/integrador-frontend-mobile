@@ -40,26 +40,38 @@ export default class LoginScreen extends React.Component {
   }
 
   onSignIn = googleUser => {
-  console.log('Google Auth Response', googleUser);
   // We need to register an Observer on Firebase Auth to make sure auth is initialized.
   var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
     unsubscribe();
-    // Check if we are already signed-in Firebase with the correct user.
     if (!this.isUserEqual(googleUser, firebaseUser)) {
-      // Build Firebase credential with the Google ID token.
       var credential = firebase.auth.GoogleAuthProvider.credential(
         googleUser.idToken,
         googleUser.accessToken
       );
-      firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function(){
-        console.console.log('user signed in');
-      }).catch(function(error) {
-        // Handle Errors here.
+      firebase.auth().signInAndRetrieveDataWithCredential(credential)
+      .then(function(){
+        firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+          fetch('https://integrador-jsd-backend.herokuapp.com/login', {
+            method: 'POST',
+            headers: new Headers({
+              'Content-Type': 'application/json',
+              idToken: idToken,
+            }),
+          }).then((response) => response.json())
+            .then((responseJson) => {
+              console.log(responseJson);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+        }).catch(function(error) {
+          console.log(error);
+        });
+      })
+      .catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
-        // The email of the user's account used.
         var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
         // ...
       });
@@ -82,17 +94,20 @@ export default class LoginScreen extends React.Component {
 
       if (result.type === 'success' && ((result.user.email).indexOf("@udea.edu.co") > -1)) {
         this.onSignIn(result);
-        return result.accessToken;
+
       } else {
         Alert.alert('Solo se pueden dominios del tipo @udea.edu.co');
         this.setState({
           entering: false,
         });
       }
+
     } catch (e) {
       this.setState({
         entering: false,
       });
+
+      console.log(e);
       return { error: true };
     }
   }

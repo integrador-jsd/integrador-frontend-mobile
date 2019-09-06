@@ -10,6 +10,7 @@ export default class ActiveScreen extends Component<{}> {
 
   constructor(props){
     super(props)
+
     var user = firebase.auth().currentUser;
     this.state = {
       name: user.displayName,
@@ -17,6 +18,24 @@ export default class ActiveScreen extends Component<{}> {
       photo: user.photoURL,
       fontLoaded: false,
     }
+  }
+
+
+  sendBackEndToken = idToken => {
+    fetch('https://integrador-jsd-backend.herokuapp.com/login', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        idToken: idToken,
+      }),
+    }).then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
   }
 
   async componentDidMount() {
