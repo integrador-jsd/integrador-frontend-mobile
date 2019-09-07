@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  StyleSheet
+  StyleSheet,
+  AsyncStorage
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Colors from '../../constants/Colors';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
+import firebase from 'firebase';
 
 export default class ScheduleScreen extends Component {
   constructor(props) {
@@ -16,6 +18,7 @@ export default class ScheduleScreen extends Component {
       items: {},
       currentDate: '',
       fontLoaded:false,
+      user: [],
     };
   }
 
@@ -25,8 +28,8 @@ export default class ScheduleScreen extends Component {
       'RalewaySemiBold': require('../../assets/fonts/Raleway-SemiBold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
     });
+    this.getUser();
     this.loadSchedule();
-
     this.setState({ fontLoaded: true });
 
     var date = new Date().getDate(); //Current Date
@@ -93,16 +96,32 @@ export default class ScheduleScreen extends Component {
 
 
   loadSchedule(){
-    const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/users/carlos.montoyah/turns/?format=calendar';
-    fetch(url)
-    .then((response) => response.json())
-    .then((responseJson) => {
-       this.setState({items: responseJson})
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      var userName = this.state.user.data.username;
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/users/'+userName+'/turns/?format=calendar';
+      fetch(url, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          idToken: idToken,
+        }),
+      }).then((response) => response.json())
+        .then((responseJson) => this.setState({items: responseJson}));
+    }.bind(this));
   }
+
+  getUser = async () => {
+  try {
+    const value = await AsyncStorage.getItem('user');
+    if (value !== null) {
+      this.setState({
+        user : JSON.parse(value),
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   loadItems(day) {
     setTimeout(() => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity,
+  View, Text, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, AsyncStorage
 } from 'react-native';
 import * as Expo from 'expo';
 import firebase from 'firebase';
@@ -40,46 +40,40 @@ export default class LoginScreen extends React.Component {
   }
 
   onSignIn = googleUser => {
-  // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-  var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
-    unsubscribe();
-    if (!this.isUserEqual(googleUser, firebaseUser)) {
-      var credential = firebase.auth.GoogleAuthProvider.credential(
-        googleUser.idToken,
-        googleUser.accessToken
-      );
-      firebase.auth().signInAndRetrieveDataWithCredential(credential)
-      .then(function(){
-        firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-          fetch('https://integrador-jsd-backend.herokuapp.com/login', {
-            method: 'POST',
-            headers: new Headers({
-              'Content-Type': 'application/json',
-              idToken: idToken,
-            }),
-          }).then((response) => response.json())
-            .then((responseJson) => {
-              console.log(responseJson);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-        }).catch(function(error) {
-          console.log(error);
-        });
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
-        // ...
-      });
-    } else {
-      console.log('User already signed-in Firebase.');
-    }
-  }.bind(this));
-}
+    var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+      unsubscribe();
+      if (!this.isUserEqual(googleUser, firebaseUser)) {
+        var credential = firebase.auth.GoogleAuthProvider.credential(
+          googleUser.idToken,
+          googleUser.accessToken
+        );
+        firebase.auth().signInAndRetrieveDataWithCredential(credential)
+        .then(function(){
+          firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+            fetch('https://integrador-jsd-backend.herokuapp.com/login', {
+              method: 'POST',
+              headers: new Headers({
+                'Content-Type': 'application/json',
+                idToken: idToken,
+              }),
+            })
+            .then((response) => response.json())
+            .then((responseJson) => this.storeData(responseJson));
+          }.bind(this))
+        }.bind(this))
+      }
+    }.bind(this));
+  }
+
+
+  storeData = async (user) => {
+  try {
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+  } catch (error) {
+    // Error saving data
+  }
+};
+
 
   signInWithGoogleAsync = async () => {
     this.setState({
