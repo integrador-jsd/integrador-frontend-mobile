@@ -17,7 +17,7 @@ const App = createStackNavigator({
 },
 
 {
-  initialRouteName: 'Splash',
+  initialRouteName: 'NewRequest',
 });
 
 const styles = StyleSheet.create({

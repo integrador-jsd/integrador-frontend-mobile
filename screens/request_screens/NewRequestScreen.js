@@ -14,6 +14,9 @@ class NewRequestScreen extends React.PureComponent{
     this.state = {
         items: [],
         fontLoaded:false,
+        date: '',
+        startTime:'',
+        endTime:'',
       }
 
 
@@ -37,27 +40,49 @@ class NewRequestScreen extends React.PureComponent{
     this.setState({ fontLoaded: true });
   }
 
+  getDate(date){
+    this.setState({date: date});
+    if(this.state.startTime && this.state.endTime){
+      console.log('lanzar consulta despues de date');
+    }
+  }
+
+  getStartTime(startTime){
+    this.setState({startTime: startTime});
+    if(this.state.date && this.state.endTime){
+      console.log('lanzar consulta despues de StartTime');
+    }
+  }
+
+  getEndTime(endTime){
+    this.setState({endTime: endTime});
+    if(this.state.startTime && this.state.date){
+      console.log('lanzar consulta despues de endTime');
+    }
+  }
+
+
 
   render(){
     if(this.state.fontLoaded){
       return (
-        <Modal
-          onRequestClose={() => {
-            this.props.navigation.goBack();
-          }}>
+        // <Modal
+        //   onRequestClose={() => {
+        //     this.props.navigation.goBack();
+        //   }}>
           <View style = {styles.container}>
               <Text style={styles.header}>Nueva solicitud</Text>
               <View style = {styles.rows}>
                 <Text style={styles.text}>Elija una fecha: </Text>
-                <DatePicker mode={'date'} format = {'DD-MM-YYYY'}/>
+                <DatePicker callback = {this.getDate.bind(this)} mode={'date'} format = {'YYYY-MM-DD'}/>
               </View>
               <View style = {styles.rows}>
                 <Text style={styles.text}>Hora inicial: </Text>
-                <DatePicker mode={'time'} format = {'HH:mm'}/>
+                <DatePicker callback = {this.getStartTime.bind(this)} mode={'time'} format = {'HH:mm'}/>
               </View>
               <View style = {styles.rows}>
                 <Text style={styles.text}>Hora final:  </Text>
-                <DatePicker mode={'time'} format = {'HH:mm'}/>
+                <DatePicker callback = {this.getEndTime.bind(this)} mode={'time'} format = {'HH:mm'}/>
               </View>
               <View style= {[styles.rows, {marginRight:'2%', marginTop:10}]}>
                 <Picker message={'Custom'} />
@@ -75,7 +100,7 @@ class NewRequestScreen extends React.PureComponent{
           </View>
 
 
-        </Modal>
+        // </Modal>
       );
     }else{
       return(
