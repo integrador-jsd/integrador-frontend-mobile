@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import { Modal, View,  StyleSheet,  Text,  TouchableHighlight, Alert, FlatList } from 'react-native';
+import { Modal, View,  StyleSheet,  Text,  TouchableHighlight, Alert, FlatList, AsyncStorage } from 'react-native';
 import Card from '../../components/Card';
 import Picker from '../../components/Picker';
 import DatePicker from '../../components/DatePicker';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import Colors from '../../constants/Colors';
+import firebase from 'firebase';
 
 class NewRequestScreen extends React.PureComponent{
   constructor(props){
@@ -17,26 +18,19 @@ class NewRequestScreen extends React.PureComponent{
         date: '',
         startTime:'',
         endTime:'',
+        user: '',
       }
 
 
   }
 
   async componentDidMount() {
-    const url = 'https://jsonplaceholder.typicode.com/users';
-    fetch(url)
-    .then((response) => response.json())
-    .then((responseJson) => {
-       this.setState({items: responseJson})
-    })
-    .catch((error) => {
-        console.log(error)
-    });
-
+    this.loadItems();
     await Font.loadAsync({
       'RalewayBold': require('../../assets/fonts/Raleway-Bold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
     });
+    this.getUser();
     this.setState({ fontLoaded: true });
   }
 
@@ -60,6 +54,58 @@ class NewRequestScreen extends React.PureComponent{
       console.log('lanzar consulta despues de endTime');
     }
   }
+
+  loadItems (){
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/sectionals/1/blocks/19/rooms';
+      fetch(url, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          idToken: idToken,
+        }),
+      }).then((response) => response.json())
+        .then((responseJson) => this.setState({items: responseJson}));
+    }.bind(this));
+  }
+
+  addRequest (room){
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
+      fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          idToken: idToken,
+        }),
+        body: JSON.stringify({
+          startTime: this.state.date +" "+ this.state.startTime,
+          endTime: this.state.date+" "+this.state.endTime,
+          requestType: 1,
+          stateID: 1,
+          createdBy: this.state.user.data.username,
+          sectionalID: room.sectionalID,
+          blockID: room.blockID,
+          roomID: room.id,
+          items: [1,2],
+        })
+      }).then((response) => response.json())
+        .then((responseJson) => console.log(responseJson));
+    }.bind(this));
+  }
+
+  getUser = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      if (value !== null) {
+        this.setState({
+          user : JSON.parse(value),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
 
@@ -94,7 +140,7 @@ class NewRequestScreen extends React.PureComponent{
                   style={{marginTop:1}}
                   data={this.state.items}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => <Card item={item}/>}
+                  renderItem={({item}) => <Card callback={this.addRequest.bind(this)} item={item}/>}
                   />
               </View>
           </View>

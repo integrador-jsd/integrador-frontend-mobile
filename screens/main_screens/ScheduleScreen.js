@@ -111,17 +111,17 @@ export default class ScheduleScreen extends Component {
   }
 
   getUser = async () => {
-  try {
-    const value = await AsyncStorage.getItem('user');
-    if (value !== null) {
-      this.setState({
-        user : JSON.parse(value),
-      });
+    try {
+      const value = await AsyncStorage.getItem('user');
+      if (value !== null) {
+        this.setState({
+          user : JSON.parse(value),
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-};
+  };
 
   loadItems(day) {
     setTimeout(() => {

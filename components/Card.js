@@ -16,6 +16,8 @@ export default class Card extends React.PureComponent {
 
     this.state = {
         fontLoaded:false,
+        sectional: '',
+        type: '',
       }
 
 
@@ -24,10 +26,27 @@ export default class Card extends React.PureComponent {
   async componentDidMount(){
     await Font.loadAsync({
       'RalewaySemiBold': require('../assets/fonts/Raleway-SemiBold.ttf'),
-      'RalewayRegular': require('../assets/fonts/Raleway-Regular.ttf'),
+      'RalewayMedium': require('../assets/fonts/Raleway-Medium.ttf'),
       'RalewayExtraLight': require('../assets/fonts/Raleway-ExtraLight.ttf'),
     });
-    this.setState({fontLoaded:true});
+    if(this.props.item.sectionalID == 1){
+      this.setState({
+        sectional: 'Sede principal',
+      });
+    }
+    if(this.props.item.type == 1){
+      this.setState({
+        type: 'Aula',
+      });
+    }
+    this.setState({
+      fontLoaded:true,
+    });
+  }
+
+
+  onPress() {
+    this.props.callback(this.props.item);
   }
 
 
@@ -35,16 +54,20 @@ export default class Card extends React.PureComponent {
     if(this.state.fontLoaded){
       return (
         <TouchableOpacity style={styles.card}
-          onPress={() => {Alert.alert('Informacion');}}>
+          onPress={() => this.onPress()}>
           <View style={{flexDirection:'row'}}>
             <Text style={styles.cardTitle}> Bloque: </Text>
-            <Text style={styles.cardType}> 19 </Text>
+            <Text style={styles.cardType}> {this.props.item.blockID} </Text>
             <Text style={[styles.cardTitle,{marginLeft:15}]}>Aula: </Text>
-            <Text style={[styles.cardType,]}> 201 </Text>
+            <Text style={[styles.cardType,]}> {this.props.item.id} </Text>
           </View>
           <View style={{flexDirection:'row'}}>
           <Text style={styles.cardTitle}> Tipo: </Text>
-          <Text style={styles.cardType}> Auditorio </Text>
+          <Text style={styles.cardType}> {this.state.type} </Text>
+          </View>
+          <View style={{flexDirection:'row'}}>
+          <Text style={styles.cardTitle}> Seccional: </Text>
+          <Text style={styles.cardType}> {this.state.sectional} </Text>
           </View>
           <Text style={styles.cardAbout}> click para mas informacion </Text>
         </TouchableOpacity>
@@ -55,11 +78,6 @@ export default class Card extends React.PureComponent {
       );
     }
   }
-}
-
-
-onPress = () => {
-   console.log('Informacion aqui')
 }
 
 
@@ -83,7 +101,7 @@ const styles = StyleSheet.create({
     }
   },
   cardTitle: {
-    fontSize:18,
+    fontSize:15,
     fontFamily:'RalewaySemiBold',
     color: 'rgb(255,255,255)',
   },
