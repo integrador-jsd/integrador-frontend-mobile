@@ -7,6 +7,7 @@ import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import Colors from '../../constants/Colors';
 import firebase from 'firebase';
+import AddRequest from '../../components/AddRequest';
 
 class NewRequestScreen extends React.PureComponent{
   constructor(props){
@@ -19,6 +20,8 @@ class NewRequestScreen extends React.PureComponent{
         startTime:'',
         endTime:'',
         user: '',
+        isVisible: false,
+        item: {},
       }
 
 
@@ -70,28 +73,34 @@ class NewRequestScreen extends React.PureComponent{
   }
 
   addRequest (room){
-    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
-      fetch(url, {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          idToken: idToken,
-        }),
-        body: JSON.stringify({
-          startTime: this.state.date +" "+ this.state.startTime,
-          endTime: this.state.date+" "+this.state.endTime,
-          requestType: 1,
-          stateID: 1,
-          createdBy: this.state.user.data.username,
-          sectionalID: room.sectionalID,
-          blockID: room.blockID,
-          roomID: room.id,
-          items: [1,2],
-        })
-      }).then((response) => response.json())
-        .then((responseJson) => console.log(responseJson));
-    }.bind(this));
+    this.state.item = room;
+    this.setState({
+      isVisible: true,
+    });
+
+
+    // firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+    //   const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
+    //   fetch(url, {
+    //     method: 'POST',
+    //     headers: new Headers({
+    //       'Content-Type': 'application/json',
+    //       idToken: idToken,
+    //     }),
+    //     body: JSON.stringify({
+    //       startTime: this.state.date +" "+ this.state.startTime,
+    //       endTime: this.state.date+" "+this.state.endTime,
+    //       requestType: 1,
+    //       stateID: 1,
+    //       createdBy: this.state.user.data.username,
+    //       sectionalID: room.sectionalID,
+    //       blockID: room.blockID,
+    //       roomID: room.id,
+    //       items: [1,2],
+    //     })
+    //   }).then((response) => response.json())
+    //     .then((responseJson) => console.log(responseJson));
+    // }.bind(this));
   }
 
   getUser = async () => {
@@ -106,6 +115,16 @@ class NewRequestScreen extends React.PureComponent{
       console.log(error);
     }
   };
+
+  hideModal(result){
+    this.setState({
+      isVisible:false,
+    });
+    if(result){
+      console.log('consular');
+    }
+
+  }
 
 
 
@@ -142,6 +161,7 @@ class NewRequestScreen extends React.PureComponent{
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({item}) => <Card callback={this.addRequest.bind(this)} item={item}/>}
                   />
+                  <AddRequest callback={this.hideModal.bind(this)} item={this.state.item} isVisible = {this.state.isVisible} />
               </View>
           </View>
 

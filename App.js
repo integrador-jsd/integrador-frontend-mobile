@@ -5,6 +5,7 @@ import MainTabNavigator from './navigation/MainTabNavigator';
 import NewRequestScreen from './screens/request_screens/NewRequestScreen';
 import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './screens/SplashScreen';
+import AddRequest from './components/AddRequest';
 
 
 
