@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { View, StyleSheet, Button, Image, Text} from 'react-native';
-import ActionButton from 'react-native-action-button';
 import firebase from 'firebase';
 import Colors from '../../constants/Colors';
 import * as Font from 'expo-font';
