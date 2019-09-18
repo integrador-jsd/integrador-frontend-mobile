@@ -73,6 +73,7 @@ class NewRequestScreen extends React.PureComponent{
   }
 
   addRequest (room){
+    console.log(room);
     this.state.item = room;
     this.setState({
       isVisible: true,
