@@ -72,36 +72,12 @@ class NewRequestScreen extends React.PureComponent{
     }.bind(this));
   }
 
-  addRequest (room){
-    console.log(room);
+  preRequest (room){
     this.state.item = room;
     this.setState({
       isVisible: true,
     });
 
-
-    // firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-    //   const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
-    //   fetch(url, {
-    //     method: 'POST',
-    //     headers: new Headers({
-    //       'Content-Type': 'application/json',
-    //       idToken: idToken,
-    //     }),
-    //     body: JSON.stringify({
-    //       startTime: this.state.date +" "+ this.state.startTime,
-    //       endTime: this.state.date+" "+this.state.endTime,
-    //       requestType: 1,
-    //       stateID: 1,
-    //       createdBy: this.state.user.data.username,
-    //       sectionalID: room.sectionalID,
-    //       blockID: room.blockID,
-    //       roomID: room.id,
-    //       items: [1,2],
-    //     })
-    //   }).then((response) => response.json())
-    //     .then((responseJson) => console.log(responseJson));
-    // }.bind(this));
   }
 
   getUser = async () => {
@@ -121,10 +97,47 @@ class NewRequestScreen extends React.PureComponent{
     this.setState({
       isVisible:false,
     });
-    if(result){
-      console.log('consular');
+    if(result.status){
+      var item = [];
+      if(result.chair){
+        item.push(1);
+      }
+      if(result.videoBeam){
+        item.push(2);
+      }
+      if(result.portatil){
+        item.push(3);
+      }
+      if(result.computer){
+        item.push(4);
+      }
+      this.addRequest(item);
     }
+  }
 
+  addRequest(result){
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
+      fetch(url, {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          idToken: idToken,
+        }),
+        body: JSON.stringify({
+          startTime: this.state.date +" "+ this.state.startTime,
+          endTime: this.state.date+" "+this.state.endTime,
+          requestType: 1,
+          stateID: 1,
+          createdBy: this.state.user.data.username,
+          sectionalID: this.state.item.sectionalID,
+          blockID: this.state.item.blockID,
+          roomID: this.state.item.id,
+          items: result,
+        })
+      }).then((response) => response.json())
+        .then((responseJson) => console.log(responseJson));
+    }.bind(this));
   }
 
 
@@ -160,7 +173,7 @@ class NewRequestScreen extends React.PureComponent{
                   style={{marginTop:1}}
                   data={this.state.items}
                   keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => <Card callback={this.addRequest.bind(this)} item={item}/>}
+                  renderItem={({item}) => <Card callback={this.preRequest.bind(this)} item={item}/>}
                   />
                   <AddRequest callback={this.hideModal.bind(this)} item={this.state.item} isVisible = {this.state.isVisible} />
               </View>

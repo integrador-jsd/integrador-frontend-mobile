@@ -11,17 +11,39 @@ import CheckBox from 'react-native-check-box'
 class AddRequest extends React.PureComponent{
   state={
     checkBox: {
-      computer: false,
+      status: false,
+      chair: false,
       videoBeam: false,
+      portatil: false,
+      computer: false,
     },
     fontLoaded: false,
   }
 
   onPressRequest(){
-    this.props.callback(true);
+    this.state.checkBox.status = true;
+    this.props.callback(this.state.checkBox);
+    this.setState({
+      checkBox: {
+        status: false,
+        chair: false,
+        videoBeam: false,
+        portatil: false,
+        computer: false,
+      }
+    });
   }
   onPressCancel(){
-    this.props.callback(false);
+    this.props.callback(this.state.checkBox);
+    this.setState({
+      checkBox: {
+        status: false,
+        chair: false,
+        videoBeam: false,
+        portatil: false,
+        computer: false,
+      }
+    });
   }
 
   async componentDidMount() {
@@ -62,34 +84,34 @@ class AddRequest extends React.PureComponent{
               <View style={{flexDirection:'row', padding: 10}}>
                 <View style={styles.checkBoxContainer}>
                   <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, otro: !this.state.checkBox.otro}})}}
-                  isChecked={this.state.checkBox.otro}
+                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}}
+                  isChecked={this.state.checkBox.chair}
                   checkBoxColor = {Colors.secondaryColor}/>
-                  <Text style={styles.textStyleCheck}> Otro </Text>
+                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}} style={styles.textStyleCheck}> Sillas </Text>
                 </View>
                 <View style={styles.checkBoxContainer}>
                   <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, otro: !this.state.checkBox.otro}})}}
-                  isChecked={this.state.checkBox.otro}
+                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}}
+                  isChecked={this.state.checkBox.computer}
                   checkBoxColor = {Colors.secondaryColor}/>
-                  <Text style={styles.textStyleCheck}> Otro1 </Text>
+                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}} style={styles.textStyleCheck}> Computador </Text>
                 </View>
               </View>
 
               <View style={{flexDirection:'row', padding: 10}}>
                 <View style={styles.checkBoxContainer}>
                   <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, otro: !this.state.checkBox.otro}})}}
-                  isChecked={this.state.checkBox.otro}
+                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}}
+                  isChecked={this.state.checkBox.videoBeam}
                   checkBoxColor = {Colors.secondaryColor}/>
-                  <Text style={styles.textStyleCheck}> Video Beam </Text>
+                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}} style={styles.textStyleCheck}> Video Beam </Text>
                 </View>
                 <View style={styles.checkBoxContainer}>
                   <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, otro: !this.state.checkBox.otro}})}}
-                  isChecked={this.state.checkBox.otro}
+                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}}
+                  isChecked={this.state.checkBox.portatil}
                   checkBoxColor = {Colors.secondaryColor}/>
-                  <Text style={styles.textStyleCheck}> Computador </Text>
+                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}} style={styles.textStyleCheck}> Portatil </Text>
                 </View>
               </View>
 
