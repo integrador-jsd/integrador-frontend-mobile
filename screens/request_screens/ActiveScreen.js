@@ -34,7 +34,6 @@ export default class ActiveScreen extends Component<{}> {
       const value = await AsyncStorage.getItem('user');
       if (value !== null) {
         this.state.user =  JSON.parse(value);
-        console.log(this.state.user);
       }
     } catch (error) {
       console.log(error);

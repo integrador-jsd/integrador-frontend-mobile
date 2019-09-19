@@ -75,9 +75,9 @@ export default class ScheduleScreen extends Component {
               calendarBackground: Colors.complementaryColor,
               backgroundColor: Colors.whiteColor,
             }}
-            onRefresh={() => console.log('refreshing...')}
-            pastScrollRange={6}
-            futureScrollRange={6}
+            onRefresh={() => this.loadSchedule()}
+            pastScrollRange={2}
+            futureScrollRange={2}
             scrollEnabled={true}
           />
         </View>
@@ -101,7 +101,22 @@ export default class ScheduleScreen extends Component {
           idToken: idToken,
         }),
       }).then((response) => response.json())
-        .then((responseJson) => this.setState({items: responseJson}));
+        .then((responseJson) => {
+
+          var date = new Date();
+          var timestamp = date.getTime();
+          for (let i = -62-date.getDate(); i < 92 - date.getDate() ; i++) {
+            const time = timestamp + i * 24 * 60 * 60 * 1000;
+            const strTime = this.timeToString(time);
+            if (!this.state.items[strTime]) {
+              this.state.items[strTime] = [];
+            }
+          }
+          Object.keys(responseJson).forEach(key => {this.state.items[key] = responseJson[key];});
+
+
+
+        })
     }.bind(this));
   }
 
@@ -118,15 +133,8 @@ export default class ScheduleScreen extends Component {
     }
   };
 
-  loadItems(day) {
+  loadItems() {
     setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-        }
-      }
       const newItems = {};
       Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
       this.setState({
