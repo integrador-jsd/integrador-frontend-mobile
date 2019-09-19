@@ -17,7 +17,7 @@ export default class ActiveScreen extends Component<{}> {
   getUserRequest(){
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       var userName = this.state.user.data.username;
-      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests/'+userName;
+      const url = 'https://integrador-jsd-backend-dev.herokuapp.com/api/v1/requests/user/'+userName;
       fetch(url, {
         method: 'GET',
         headers: new Headers({
@@ -44,7 +44,6 @@ export default class ActiveScreen extends Component<{}> {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <Text onPress={this.getUserRequest.bind(this)}> Traer aulas </Text>
         <FloatingButton/>
       </View>
     );

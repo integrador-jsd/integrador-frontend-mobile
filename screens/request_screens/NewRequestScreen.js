@@ -164,10 +164,10 @@ class NewRequestScreen extends React.PureComponent{
   render(){
     if(this.state.fontLoaded){
       return (
-        // <Modal
-        //   onRequestClose={() => {
-        //     this.props.navigation.goBack();
-        //   }}>
+        <Modal
+          onRequestClose={() => {
+            this.props.navigation.goBack();
+          }}>
           <View style = {styles.container}>
               <Text style={styles.header}>Nueva solicitud</Text>
               <View style = {styles.rows}>
@@ -200,7 +200,7 @@ class NewRequestScreen extends React.PureComponent{
           </View>
 
 
-        // </Modal>
+        </Modal>
       );
     }else{
       return(
