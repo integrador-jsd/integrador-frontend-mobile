@@ -42,11 +42,6 @@ export default class ScheduleScreen extends Component {
 
 
 
-
-
-
-
-
   }
 
   render() {

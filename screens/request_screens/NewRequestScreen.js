@@ -8,6 +8,7 @@ import { AppLoading } from 'expo';
 import Colors from '../../constants/Colors';
 import firebase from 'firebase';
 import AddRequest from '../../components/AddRequest';
+import Loader from '../../components/Loader';
 
 class NewRequestScreen extends React.PureComponent{
   constructor(props){
@@ -22,13 +23,13 @@ class NewRequestScreen extends React.PureComponent{
         user: '',
         isVisible: false,
         item: {},
+        loader: false,
       }
 
 
   }
 
   async componentDidMount() {
-    this.loadItems();
     await Font.loadAsync({
       'RalewayBold': require('../../assets/fonts/Raleway-Bold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
@@ -40,25 +41,26 @@ class NewRequestScreen extends React.PureComponent{
   getDate(date){
     this.setState({date: date});
     if(this.state.startTime && this.state.endTime){
-      console.log('lanzar consulta despues de date');
+      this.loadItems();
     }
   }
 
   getStartTime(startTime){
     this.setState({startTime: startTime});
     if(this.state.date && this.state.endTime){
-      console.log('lanzar consulta despues de StartTime');
+      this.loadItems();
     }
   }
 
   getEndTime(endTime){
     this.setState({endTime: endTime});
     if(this.state.startTime && this.state.date){
-      console.log('lanzar consulta despues de endTime');
+      this.loadItems();
     }
   }
 
   loadItems (){
+    this.state.loader = true;
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/sectionals/1/blocks/19/rooms';
       fetch(url, {
@@ -67,9 +69,20 @@ class NewRequestScreen extends React.PureComponent{
           'Content-Type': 'application/json',
           idToken: idToken,
         }),
+        // body: JSON.stringify({
+        //   startTime: this.state.date +" "+ this.state.startTime,
+        //   endTime: this.state.date+" "+this.state.endTime,
+        // })
       }).then((response) => response.json())
         .then((responseJson) => this.setState({items: responseJson}));
     }.bind(this));
+
+    //wait loading
+    setTimeout(() => {
+      this.setState({
+        loader:false,
+      });
+    }, 2000);
   }
 
   preRequest (room){
@@ -116,6 +129,7 @@ class NewRequestScreen extends React.PureComponent{
   }
 
   addRequest(result){
+    this.state.loader = true;
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
       fetch(url, {
@@ -136,7 +150,12 @@ class NewRequestScreen extends React.PureComponent{
           items: result,
         })
       }).then((response) => response.json())
-        .then((responseJson) => console.log(responseJson));
+        .then((responseJson) => {
+          this.setState({
+            loader:false,
+          });
+          Alert.alert(responseJson.message);
+        });
     }.bind(this));
   }
 
@@ -176,6 +195,7 @@ class NewRequestScreen extends React.PureComponent{
                   renderItem={({item}) => <Card callback={this.preRequest.bind(this)} item={item}/>}
                   />
                   <AddRequest callback={this.hideModal.bind(this)} item={this.state.item} isVisible = {this.state.isVisible} />
+                  <Loader loader={this.state.loader}/>
               </View>
           </View>
 

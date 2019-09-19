@@ -19,7 +19,7 @@ class SplashScreen extends React.Component {
       if(user){
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'NewRequest' })],
+            actions: [NavigationActions.navigate({ routeName: 'MainTab' })],
         });
         this.props.navigation.dispatch(resetAction);
       }else{
