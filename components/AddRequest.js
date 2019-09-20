@@ -52,6 +52,7 @@ class AddRequest extends React.PureComponent{
       'RalewayRegular': require('../assets/fonts/Raleway-RegularItalic.ttf'),
       'RalewayLightItalic': require('../assets/fonts/Raleway-LightItalic.ttf'),
     });
+
     this.setState({ fontLoaded: true });
   }
 
@@ -67,7 +68,7 @@ class AddRequest extends React.PureComponent{
           style={{padding:10}}
           >
             <View style={{backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius:8, opacity: 10}}>
-              <View style={{backgroundColor: Colors.secondaryColor, padding:10, borderRadius:8,}}>
+              <View style={{backgroundColor: Colors.secondaryColor, padding:10, borderTopRightRadius: 8, borderTopLeftRadius: 8}}>
                 <Text style={[styles.titleText, {color: Colors.whiteColor}]}> Solicitud </Text>
                 <View style={{flexDirection:'row'}}>
                   <Text style={styles.textStyle}> Bloque: {this.props.item.blockID} </Text>
@@ -79,51 +80,51 @@ class AddRequest extends React.PureComponent{
                 </View>
                 <Text style={[styles.textStyle, {flex: 0}]}> Seccional: {this.props.item.sectionalID} </Text>
               </View>
-
-              <Text style={[styles.titleText, {fontSize: 20, paddingTop: 20, paddingBottom: 10}]}> Selecciona los items que necesites: </Text>
-              <View style={{flexDirection:'row', padding: 10}}>
-                <View style={styles.checkBoxContainer}>
-                  <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}}
-                  isChecked={this.state.checkBox.chair}
-                  checkBoxColor = {Colors.secondaryColor}/>
-                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}} style={styles.textStyleCheck}> Sillas </Text>
+              <View>
+                <Text style={[styles.titleText, {fontSize: 20, paddingTop: 20, paddingBottom: 10}]}> Selecciona los items que necesites: </Text>
+                <View style={{flexDirection:'row', padding: 10}}>
+                  <View style={styles.checkBoxContainer}>
+                    <CheckBox
+                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}}
+                    isChecked={this.state.checkBox.chair}
+                    checkBoxColor = {Colors.secondaryColor}/>
+                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}} style={styles.textStyleCheck}> Sillas </Text>
+                  </View>
+                  <View style={styles.checkBoxContainer}>
+                    <CheckBox
+                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}}
+                    isChecked={this.state.checkBox.computer}
+                    checkBoxColor = {Colors.secondaryColor}/>
+                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}} style={styles.textStyleCheck}> Computador </Text>
+                  </View>
                 </View>
-                <View style={styles.checkBoxContainer}>
-                  <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}}
-                  isChecked={this.state.checkBox.computer}
-                  checkBoxColor = {Colors.secondaryColor}/>
-                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}} style={styles.textStyleCheck}> Computador </Text>
+
+                <View style={{flexDirection:'row', padding: 10}}>
+                  <View style={styles.checkBoxContainer}>
+                    <CheckBox
+                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}}
+                    isChecked={this.state.checkBox.videoBeam}
+                    checkBoxColor = {Colors.secondaryColor}/>
+                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}} style={styles.textStyleCheck}> Video Beam </Text>
+                  </View>
+                  <View style={styles.checkBoxContainer}>
+                    <CheckBox
+                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}}
+                    isChecked={this.state.checkBox.portatil}
+                    checkBoxColor = {Colors.secondaryColor}/>
+                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}} style={styles.textStyleCheck}> Portatil </Text>
+                  </View>
                 </View>
               </View>
 
-              <View style={{flexDirection:'row', padding: 10}}>
-                <View style={styles.checkBoxContainer}>
-                  <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}}
-                  isChecked={this.state.checkBox.videoBeam}
-                  checkBoxColor = {Colors.secondaryColor}/>
-                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}} style={styles.textStyleCheck}> Video Beam </Text>
-                </View>
-                <View style={styles.checkBoxContainer}>
-                  <CheckBox
-                  onClick={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}}
-                  isChecked={this.state.checkBox.portatil}
-                  checkBoxColor = {Colors.secondaryColor}/>
-                  <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}} style={styles.textStyleCheck}> Portatil </Text>
-                </View>
-              </View>
-
-              <View style={{flexDirection:'row', padding:10, paddingTop:20}}>
-                <TouchableOpacity style={{flex: 0.5, alignItems: 'flex-start'}}  onPress={this.onPressCancel.bind(this)}>
-                  <Text style={{color: Colors.primaryColor, fontSize:18, flex:0, fontFamily: 'RalewayLightItalic'}}> Cancelar </Text>
+              <View style={{flexDirection:'row', paddingTop:20}}>
+                <TouchableOpacity style={[styles.textStyleOption, {borderBottomLeftRadius:8} ]}  onPress={this.onPressCancel.bind(this)}>
+                  <Text style={{color: Colors.whiteColor, fontSize:18, flex:0, fontFamily: 'RalewayRegular'}}> Cancelar </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{flex: 0.5, alignItems: 'flex-end'}} onPress={this.onPressRequest.bind(this)}>
-                  <Text style={{color: Colors.primaryColor, fontSize:18, flex:0, fontFamily: 'RalewayLightItalic'}}> Solicitar </Text>
+                <TouchableOpacity style={[styles.textStyleOption, {borderBottomRightRadius:8} ]} onPress={this.onPressRequest.bind(this)}>
+                  <Text style={{color: Colors.whiteColor, fontSize:18, flex:0, fontFamily: 'RalewayRegular'}}> Solicitar </Text>
                 </TouchableOpacity>
               </View>
-
             </View>
           </Modal>
         </View>
@@ -150,19 +151,26 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     color: Colors.whiteColor,
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'RalewayRegular',
     flex: 0.5,
   },
   titleText: {
     color: Colors.primaryColor,
-    fontSize: 30,
+    fontSize: 32,
     fontFamily: 'RalewayBold',
     textAlign: 'center',
+    paddingBottom: 10,
   },
   textStyleCheck: {
     color: Colors.primaryColor,
     fontSize: 16,
     fontFamily: 'RalewayRegular',
+  },
+  textStyleOption: {
+    flex: 0.5, alignItems: 'center',
+    justifyContent:'center',
+    backgroundColor:Colors.secondaryColor,
+    height:40,
   },
 });

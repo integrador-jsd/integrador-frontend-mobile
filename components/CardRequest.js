@@ -59,7 +59,7 @@ export default class Card extends React.PureComponent {
             <Text style={styles.cardTitle}> Bloque: </Text>
             <Text style={styles.cardType}> {this.props.item.blockID} </Text>
             <Text style={[styles.cardTitle,{marginLeft:15}]}>Aula: </Text>
-            <Text style={[styles.cardType,]}> {this.props.item.id} </Text>
+            <Text style={[styles.cardType,]}> {this.props.item.roomID} </Text>
           </View>
           <View style={{flexDirection:'row'}}>
           <Text style={styles.cardTitle}> Tipo: </Text>
@@ -68,6 +68,10 @@ export default class Card extends React.PureComponent {
           <View style={{flexDirection:'row'}}>
           <Text style={styles.cardTitle}> Seccional: </Text>
           <Text style={styles.cardType}> {this.state.sectional} </Text>
+          </View>
+          <View style={{flexDirection:'row'}}>
+          <Text style={styles.cardTitle}> Estado: </Text>
+          <Text style={styles.cardType}> {this.props.item.request_type.type} </Text>
           </View>
           <Text style={styles.cardAbout}> click para mas informacion </Text>
         </TouchableOpacity>
@@ -84,7 +88,7 @@ export default class Card extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgb(255,255,255)',
+    backgroundColor: Colors.secondaryColor,
   },
   card: {
     backgroundColor : Colors.secondaryColor,
@@ -93,10 +97,10 @@ const styles = StyleSheet.create({
     width: '94%',
     shadowColor: '#ABEBC6',
     borderRadius: 5,
-    elevation:3,
-    shadowRadius: 1,
     borderColor: Colors.primaryColor,
     borderWidth: 2,
+    elevation:3,
+    shadowRadius: 1,
     shadowOffset: {
       width:3,
       height:3,

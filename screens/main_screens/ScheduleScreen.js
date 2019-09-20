@@ -10,6 +10,7 @@ import Colors from '../../constants/Colors';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import firebase from 'firebase';
+import Loader from '../../components/Loader';
 
 export default class ScheduleScreen extends Component {
   constructor(props) {
@@ -28,9 +29,9 @@ export default class ScheduleScreen extends Component {
       'RalewaySemiBold': require('../../assets/fonts/Raleway-SemiBold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
     });
-    this.getUser();
-    this.loadSchedule();
     this.setState({ fontLoaded: true });
+    await this.getUser();
+    this.loadSchedule();
 
     var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
@@ -50,7 +51,6 @@ export default class ScheduleScreen extends Component {
         <View style={styles.container}>
           <Agenda
             items={this.state.items}
-            loadItemsForMonth={this.loadItems.bind(this)}
             selected={this.state.currentDate}
             renderItem={this.renderItem.bind(this)}
             renderEmptyDate={this.renderEmptyDate.bind(this)}
@@ -84,7 +84,7 @@ export default class ScheduleScreen extends Component {
       );
     }else{
       return(
-        <AppLoading/>
+        <Loader loader={true}/>
       );
     }
   }
@@ -113,6 +113,9 @@ export default class ScheduleScreen extends Component {
             }
           }
           Object.keys(responseJson).forEach(key => {this.state.items[key] = responseJson[key];});
+          this.setState({
+            items: this.state.items,
+          });
 
 
 
@@ -132,16 +135,6 @@ export default class ScheduleScreen extends Component {
       console.log(error);
     }
   };
-
-  loadItems() {
-    setTimeout(() => {
-      const newItems = {};
-      Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
-      this.setState({
-        items: newItems
-      });
-    }, 300);
-  }
 
   renderItem(item) {
     return (

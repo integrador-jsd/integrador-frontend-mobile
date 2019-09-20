@@ -1,20 +1,29 @@
 import React, {Component} from 'react';
-import { View, StyleSheet, Text, Alert, Image, AsyncStorage} from 'react-native';
+import { View, StyleSheet, Text, Alert, Image, AsyncStorage, FlatList} from 'react-native';
 import ActionButton from 'react-native-action-button';
 import FloatingButton from '../../components/FloatingButton';
+import CardRequest from '../../components/CardRequest';
+import Colors from '../../constants/Colors';
+import Loader from '../../components/Loader';
+
 import firebase from 'firebase';
 
 export default class ActiveScreen extends Component<{}> {
   state = {
     user: [],
+    items: [],
+    loader: false,
   }
 
   async componentDidMount(){
     await this.getUser();
-    this.getUserRequest();
+    await this.getUserRequest();
   }
 
   getUserRequest(){
+    this.setState({
+      loader: true,
+    });
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       var userName = this.state.user.data.username;
       const url = 'https://integrador-jsd-backend-dev.herokuapp.com/api/v1/requests/user/'+userName;
@@ -25,7 +34,12 @@ export default class ActiveScreen extends Component<{}> {
           idToken: idToken,
         }),
       }).then((response) => response.json())
-        .then((responseJson) => console.log(responseJson));
+        .then((responseJson) => {
+            this.setState({
+              items: responseJson,
+              loader: false,
+            });
+          })
     }.bind(this));
   }
 
@@ -41,9 +55,15 @@ export default class ActiveScreen extends Component<{}> {
   };
 
   render(){
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
+        <FlatList
+          style={{marginTop:1}}
+          data={this.state.items}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => <CardRequest item={item}/>}
+          />
+        <Loader loader={this.state.loader}/>
         <FloatingButton/>
       </View>
     );

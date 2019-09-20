@@ -60,7 +60,9 @@ class NewRequestScreen extends React.PureComponent{
   }
 
   loadItems (){
-    this.state.loader = true;
+    this.setState({
+      loader: true,
+    });
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/sectionals/1/blocks/19/rooms';
       fetch(url, {
@@ -74,15 +76,13 @@ class NewRequestScreen extends React.PureComponent{
         //   endTime: this.state.date+" "+this.state.endTime,
         // })
       }).then((response) => response.json())
-        .then((responseJson) => this.setState({items: responseJson}));
+        .then((responseJson) => {
+          this.setState({
+              items: responseJson,
+              loader: false,
+          });
+        })
     }.bind(this));
-
-    //wait loading
-    setTimeout(() => {
-      this.setState({
-        loader:false,
-      });
-    }, 2000);
   }
 
   preRequest (room){
@@ -113,23 +113,37 @@ class NewRequestScreen extends React.PureComponent{
     if(result.status){
       var item = [];
       if(result.chair){
-        item.push(1);
+        item.push({
+          itemType: 1,
+          quantity: 1
+        });
       }
       if(result.videoBeam){
-        item.push(2);
+        item.push({
+          itemType: 2,
+          quantity: 1
+        });
       }
       if(result.portatil){
-        item.push(3);
+        item.push({
+          itemType: 3,
+          quantity: 1
+        });
       }
       if(result.computer){
-        item.push(4);
+        item.push({
+          itemType: 4,
+          quantity: 1
+        });
       }
       this.addRequest(item);
     }
   }
 
   addRequest(result){
-    this.state.loader = true;
+    this.setState({
+      loader: true,
+    });
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
       fetch(url, {
