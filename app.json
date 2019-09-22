@@ -12,10 +12,10 @@
       "web"
     ],
     "ios": {
-      "bundleIdentifier": "udea.edu.co.integrador"
+      "bundleIdentifier": "host.exp.exponent"
     },
     "android": {
-      "package": "udea.edu.co.integrador"
+      "package": "host.exp.exponent"
     },
     "orientation": "portrait",
     "splash": {

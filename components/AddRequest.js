@@ -1,21 +1,20 @@
 import React, {Component} from 'react';
-import {View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, Button, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import Modal from "react-native-modal";
 import Colors from '../constants/Colors';
-import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-import CheckBox from 'react-native-check-box'
+import CheckBox from './CheckBox';
+import firebase from 'firebase';
+import  Loader from './Loader';
 
 
 
 class AddRequest extends React.PureComponent{
   state={
+    allItems: [],
     checkBox: {
       status: false,
-      chair: false,
-      videoBeam: false,
-      portatil: false,
-      computer: false,
+      selectItems: [],
     },
     fontLoaded: false,
   }
@@ -23,27 +22,13 @@ class AddRequest extends React.PureComponent{
   onPressRequest(){
     this.state.checkBox.status = true;
     this.props.callback(this.state.checkBox);
-    this.setState({
-      checkBox: {
-        status: false,
-        chair: false,
-        videoBeam: false,
-        portatil: false,
-        computer: false,
-      }
-    });
+    this.state.checkBox.status = false;
+    this.state.checkBox.selectItems = [];
   }
   onPressCancel(){
+    this.state.checkBox.status = false;
     this.props.callback(this.state.checkBox);
-    this.setState({
-      checkBox: {
-        status: false,
-        chair: false,
-        videoBeam: false,
-        portatil: false,
-        computer: false,
-      }
-    });
+    this.state.checkBox.selectItems = [];
   }
 
   async componentDidMount() {
@@ -52,10 +37,35 @@ class AddRequest extends React.PureComponent{
       'RalewayRegular': require('../assets/fonts/Raleway-RegularItalic.ttf'),
       'RalewayLightItalic': require('../assets/fonts/Raleway-LightItalic.ttf'),
     });
-
     this.setState({ fontLoaded: true });
+    this.getItems();
   }
 
+  getItems(){
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      const url = 'http://integrador-jsd-backend-dev.herokuapp.com/api/v1/items/types';
+      fetch(url, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          idToken: idToken,
+        }),
+      }).then((response) => response.json())
+        .then((responseJson) => this.setState({allItems: responseJson}))
+      }.bind(this));
+  }
+
+  callBackCheckBox(item){
+    if(item.status){
+      this.state.checkBox.selectItems.push({
+        itemType: item.id,
+        quantity: 1,
+      });
+    }else{
+      var removeIndex = this.state.checkBox.selectItems.map(function(option) { return option.id; }).indexOf(item.id);
+      this.state.checkBox.selectItems.splice(removeIndex, 1);
+    }
+  }
 
   render(){
     if(this.state.fontLoaded){
@@ -82,41 +92,13 @@ class AddRequest extends React.PureComponent{
               </View>
               <View>
                 <Text style={[styles.titleText, {fontSize: 20, paddingTop: 20, paddingBottom: 10}]}> Selecciona los items que necesites: </Text>
-                <View style={{flexDirection:'row', padding: 10}}>
-                  <View style={styles.checkBoxContainer}>
-                    <CheckBox
-                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}}
-                    isChecked={this.state.checkBox.chair}
-                    checkBoxColor = {Colors.secondaryColor}/>
-                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, chair: !this.state.checkBox.chair}})}} style={styles.textStyleCheck}> Sillas </Text>
-                  </View>
-                  <View style={styles.checkBoxContainer}>
-                    <CheckBox
-                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}}
-                    isChecked={this.state.checkBox.computer}
-                    checkBoxColor = {Colors.secondaryColor}/>
-                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, computer: !this.state.checkBox.computer}})}} style={styles.textStyleCheck}> Computador </Text>
-                  </View>
-                </View>
-
-                <View style={{flexDirection:'row', padding: 10}}>
-                  <View style={styles.checkBoxContainer}>
-                    <CheckBox
-                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}}
-                    isChecked={this.state.checkBox.videoBeam}
-                    checkBoxColor = {Colors.secondaryColor}/>
-                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, videoBeam: !this.state.checkBox.videoBeam}})}} style={styles.textStyleCheck}> Video Beam </Text>
-                  </View>
-                  <View style={styles.checkBoxContainer}>
-                    <CheckBox
-                    onClick={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}}
-                    isChecked={this.state.checkBox.portatil}
-                    checkBoxColor = {Colors.secondaryColor}/>
-                    <Text onPress={()=>{this.setState({checkBox: {...this.state.checkBox, portatil: !this.state.checkBox.portatil}})}} style={styles.textStyleCheck}> Portatil </Text>
-                  </View>
-                </View>
+                <FlatList
+                  style={{marginTop:1}}
+                  data={this.state.allItems}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => <CheckBox callback={this.callBackCheckBox.bind(this)} item={item} />}
+                  />
               </View>
-
               <View style={{flexDirection:'row', paddingTop:20}}>
                 <TouchableOpacity style={[styles.textStyleOption, {borderBottomLeftRadius:8} ]}  onPress={this.onPressCancel.bind(this)}>
                   <Text style={{color: Colors.whiteColor, fontSize:18, flex:0, fontFamily: 'RalewayRegular'}}> Cancelar </Text>
@@ -131,7 +113,7 @@ class AddRequest extends React.PureComponent{
       );
     }else{
       return(
-        <AppLoading/>
+        <Loader loader={true} />
       );
     }
   }
@@ -144,11 +126,6 @@ AddRequest.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
-  checkBoxContainer:{
-    flexDirection: 'row',
-    flex: 0.5,
-    alignItems: 'center',
-  },
   textStyle: {
     color: Colors.whiteColor,
     fontSize: 18,

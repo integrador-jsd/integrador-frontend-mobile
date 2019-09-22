@@ -7,6 +7,7 @@ import firebase from 'firebase';
 import firebaseConfig from './config';
 import Colors from '../constants/Colors';
 import * as Font from 'expo-font';
+import * as AppAuth from 'expo-app-auth';
 firebase.initializeApp(firebaseConfig);
 
 
@@ -85,13 +86,10 @@ export default class LoginScreen extends React.Component {
         androidStandaloneAppClientId: '553884378564-le9276vg4q3adfhlr4ss3hktgols45tm.apps.googleusercontent.com',
         iosClientId: '553884378564-mmg1ak77r14gt59q63jhf628uthr4ejd.apps.googleusercontent.com',
         iosStandaloneAppClientId: '553884378564-mmg1ak77r14gt59q63jhf628uthr4ejd.apps.googleusercontent.com',
-        webClientId: '553884378564-kn476vsb7bu4dbg62rfjecirebae3gan.apps.googleusercontent.com',
-        //redirectUrl: '${AppAuth.OAuthRedirect}:/oauth2redirect/google',
         scopes: ['profile', 'email'],
       });
 
       if (result.type === 'success' && ((result.user.email).indexOf("@udea.edu.co") > -1)) {
-        Alert.alert(JSON.stringify(result));
         this.onSignIn(result);
 
       } else {
@@ -105,7 +103,7 @@ export default class LoginScreen extends React.Component {
       this.setState({
         entering: false,
       });
-      Alert.alert(e);
+
       console.log(e);
       return { error: true };
     }

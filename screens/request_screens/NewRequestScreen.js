@@ -90,7 +90,6 @@ class NewRequestScreen extends React.PureComponent{
     this.setState({
       isVisible: true,
     });
-
   }
 
   getUser = async () => {
@@ -111,32 +110,7 @@ class NewRequestScreen extends React.PureComponent{
       isVisible:false,
     });
     if(result.status){
-      var item = [];
-      if(result.chair){
-        item.push({
-          itemType: 1,
-          quantity: 1
-        });
-      }
-      if(result.videoBeam){
-        item.push({
-          itemType: 2,
-          quantity: 1
-        });
-      }
-      if(result.portatil){
-        item.push({
-          itemType: 3,
-          quantity: 1
-        });
-      }
-      if(result.computer){
-        item.push({
-          itemType: 4,
-          quantity: 1
-        });
-      }
-      this.addRequest(item);
+      this.addRequest(result);
     }
   }
 
@@ -168,7 +142,11 @@ class NewRequestScreen extends React.PureComponent{
           this.setState({
             loader:false,
           });
-          Alert.alert(responseJson.message);
+          if(responseJson.message == "Created"){
+            Alert.alert('Solicitud creada');
+          }else{
+            Alert.alert('La solicitud falló');
+          }
         });
     }.bind(this));
   }
