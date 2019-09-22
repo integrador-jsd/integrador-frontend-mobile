@@ -1,5 +1,4 @@
 import {createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
-import {FloatingAction} from 'react-native-floating-action';
 import { StyleSheet, View, Image, TouchableOpacity, Alert } from 'react-native';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';

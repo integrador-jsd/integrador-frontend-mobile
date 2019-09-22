@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity,
+  View, Text, StyleSheet, Alert, ActivityIndicator, Image, TouchableOpacity, AsyncStorage
 } from 'react-native';
 import * as Expo from 'expo';
 import firebase from 'firebase';
 import firebaseConfig from './config';
 import Colors from '../constants/Colors';
 import * as Font from 'expo-font';
+import * as AppAuth from 'expo-app-auth';
 firebase.initializeApp(firebaseConfig);
 
 
@@ -40,46 +41,40 @@ export default class LoginScreen extends React.Component {
   }
 
   onSignIn = googleUser => {
-  // We need to register an Observer on Firebase Auth to make sure auth is initialized.
-  var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
-    unsubscribe();
-    if (!this.isUserEqual(googleUser, firebaseUser)) {
-      var credential = firebase.auth.GoogleAuthProvider.credential(
-        googleUser.idToken,
-        googleUser.accessToken
-      );
-      firebase.auth().signInAndRetrieveDataWithCredential(credential)
-      .then(function(){
-        firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-          fetch('https://integrador-jsd-backend.herokuapp.com/login', {
-            method: 'POST',
-            headers: new Headers({
-              'Content-Type': 'application/json',
-              idToken: idToken,
-            }),
-          }).then((response) => response.json())
-            .then((responseJson) => {
-              console.log(responseJson);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-        }).catch(function(error) {
-          console.log(error);
-        });
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        var email = error.email;
-        var credential = error.credential;
-        // ...
-      });
-    } else {
-      console.log('User already signed-in Firebase.');
-    }
-  }.bind(this));
-}
+    var unsubscribe = firebase.auth().onAuthStateChanged(function(firebaseUser) {
+      unsubscribe();
+      if (!this.isUserEqual(googleUser, firebaseUser)) {
+        var credential = firebase.auth.GoogleAuthProvider.credential(
+          googleUser.idToken,
+          googleUser.accessToken
+        );
+        firebase.auth().signInAndRetrieveDataWithCredential(credential)
+        .then(function(){
+          firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+            fetch('https://integrador-jsd-backend.herokuapp.com/login', {
+              method: 'POST',
+              headers: new Headers({
+                'Content-Type': 'application/json',
+                idToken: idToken,
+              }),
+            })
+            .then((response) => response.json())
+            .then((responseJson) => this.storeData(responseJson));
+          }.bind(this))
+        }.bind(this))
+      }
+    }.bind(this));
+  }
+
+
+  storeData = async (user) => {
+  try {
+    await AsyncStorage.setItem('user', JSON.stringify(user));
+  } catch (error) {
+    // Error saving data
+  }
+};
+
 
   signInWithGoogleAsync = async () => {
     this.setState({
@@ -88,7 +83,9 @@ export default class LoginScreen extends React.Component {
     try {
       const result = await Expo.Google.logInAsync({
         androidClientId: '553884378564-le9276vg4q3adfhlr4ss3hktgols45tm.apps.googleusercontent.com',
+        androidStandaloneAppClientId: '553884378564-le9276vg4q3adfhlr4ss3hktgols45tm.apps.googleusercontent.com',
         iosClientId: '553884378564-mmg1ak77r14gt59q63jhf628uthr4ejd.apps.googleusercontent.com',
+        iosStandaloneAppClientId: '553884378564-mmg1ak77r14gt59q63jhf628uthr4ejd.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
       });
 

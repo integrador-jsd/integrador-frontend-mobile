@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  StyleSheet
+  StyleSheet,
+  AsyncStorage
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Colors from '../../constants/Colors';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
+import firebase from 'firebase';
+import Loader from '../../components/Loader';
 
 export default class ScheduleScreen extends Component {
   constructor(props) {
@@ -16,6 +19,7 @@ export default class ScheduleScreen extends Component {
       items: {},
       currentDate: '',
       fontLoaded:false,
+      user: [],
     };
   }
 
@@ -25,9 +29,9 @@ export default class ScheduleScreen extends Component {
       'RalewaySemiBold': require('../../assets/fonts/Raleway-SemiBold.ttf'),
       'RalewayRegular': require('../../assets/fonts/Raleway-Regular.ttf'),
     });
-    this.loadSchedule();
-
     this.setState({ fontLoaded: true });
+    await this.getUser();
+    this.loadSchedule();
 
     var date = new Date().getDate(); //Current Date
     var month = new Date().getMonth() + 1; //Current Month
@@ -39,11 +43,6 @@ export default class ScheduleScreen extends Component {
 
 
 
-
-
-
-
-
   }
 
   render() {
@@ -52,7 +51,6 @@ export default class ScheduleScreen extends Component {
         <View style={styles.container}>
           <Agenda
             items={this.state.items}
-            loadItemsForMonth={this.loadItems.bind(this)}
             selected={this.state.currentDate}
             renderItem={this.renderItem.bind(this)}
             renderEmptyDate={this.renderEmptyDate.bind(this)}
@@ -77,49 +75,66 @@ export default class ScheduleScreen extends Component {
               calendarBackground: Colors.complementaryColor,
               backgroundColor: Colors.whiteColor,
             }}
-            onRefresh={() => console.log('refreshing...')}
-            pastScrollRange={6}
-            futureScrollRange={6}
+            onRefresh={() => this.loadSchedule()}
+            pastScrollRange={2}
+            futureScrollRange={2}
             scrollEnabled={true}
           />
         </View>
       );
     }else{
       return(
-        <AppLoading/>
+        <Loader loader={true}/>
       );
     }
   }
 
 
   loadSchedule(){
-    const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/users/carlos.montoyah/turns/?format=calendar';
-    fetch(url)
-    .then((response) => response.json())
-    .then((responseJson) => {
-       this.setState({items: responseJson})
-    })
-    .catch((error) => {
-        console.log(error)
-    });
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      var userName = this.state.user.data.username;
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/users/'+userName+'/turns/?format=calendar';
+      fetch(url, {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          idToken: idToken,
+        }),
+      }).then((response) => response.json())
+        .then((responseJson) => {
+
+          var date = new Date();
+          var timestamp = date.getTime();
+          for (let i = -62-date.getDate(); i < 92 - date.getDate() ; i++) {
+            const time = timestamp + i * 24 * 60 * 60 * 1000;
+            const strTime = this.timeToString(time);
+            if (!this.state.items[strTime]) {
+              this.state.items[strTime] = [];
+            }
+          }
+          Object.keys(responseJson).forEach(key => {this.state.items[key] = responseJson[key];});
+          this.setState({
+            items: this.state.items,
+          });
+
+
+
+        })
+    }.bind(this));
   }
 
-  loadItems(day) {
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
-        if (!this.state.items[strTime]) {
-          this.state.items[strTime] = [];
-        }
+  getUser = async () => {
+    try {
+      const value = await AsyncStorage.getItem('user');
+      if (value !== null) {
+        this.setState({
+          user : JSON.parse(value),
+        });
       }
-      const newItems = {};
-      Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
-      this.setState({
-        items: newItems
-      });
-    }, 300);
-  }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   renderItem(item) {
     return (
