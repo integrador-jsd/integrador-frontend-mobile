@@ -9,6 +9,7 @@ import {
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import Colors from '../constants/Colors';
+import Loader from './Loader';
 
 export default class Card extends React.PureComponent {
   constructor(props){
@@ -18,6 +19,7 @@ export default class Card extends React.PureComponent {
         fontLoaded:false,
         sectional: '',
         type: '',
+        isVisible: false,
       }
 
 
@@ -43,12 +45,9 @@ export default class Card extends React.PureComponent {
       fontLoaded:true,
     });
   }
-
-
   onPress() {
     this.props.callback(this.props.item);
   }
-
 
   render(){
     if(this.state.fontLoaded){

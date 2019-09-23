@@ -5,7 +5,7 @@ import FloatingButton from '../../components/FloatingButton';
 import CardRequest from '../../components/CardRequest';
 import Colors from '../../constants/Colors';
 import Loader from '../../components/Loader';
-
+import CardRequestInfo from '../../components/CardRequestInfo';
 import firebase from 'firebase';
 
 export default class ActiveScreen extends Component<{}> {
@@ -13,6 +13,8 @@ export default class ActiveScreen extends Component<{}> {
     user: [],
     items: [],
     loader: false,
+    isVisible: false,
+    item: {},
   }
 
   async componentDidMount(){
@@ -54,6 +56,24 @@ export default class ActiveScreen extends Component<{}> {
     }
   };
 
+  callBackCard(status){
+    this.setState({
+      isVisible: false,
+    });
+    if(status){
+      console.log('cancelada');
+    }else{
+      console.log('no hizo nada');
+    }
+  }
+
+  preRequest (room){
+    this.state.item = room;
+    this.setState({
+      isVisible: true,
+    });
+  }
+
   render(){
     return (
       <View style={styles.container}>
@@ -61,9 +81,10 @@ export default class ActiveScreen extends Component<{}> {
           style={{marginTop:1}}
           data={this.state.items}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <CardRequest item={item}/>}
+          renderItem={({item}) => <CardRequest callback={this.preRequest.bind(this)} item={item}/>}
           />
         <Loader loader={this.state.loader}/>
+        <CardRequestInfo callback={this.callBackCard.bind(this)} isVisible={this.state.isVisible} item={this.state.item} />
         <FloatingButton/>
       </View>
     );
