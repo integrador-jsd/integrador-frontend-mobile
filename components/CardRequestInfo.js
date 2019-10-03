@@ -4,6 +4,7 @@ import Modal from "react-native-modal";
 import Colors from '../constants/Colors';
 import * as Font from 'expo-font';
 import Loader from './Loader';
+import renderif from './RenderIf';
 
 
 
@@ -11,6 +12,10 @@ class CardRequestInfo extends React.PureComponent{
   state = {
     status: false,
     fontLoaded: false,
+    date: '',
+    start: '',
+    end: '',
+    sectional: '',
   }
 
   async componentDidMount() {
@@ -32,7 +37,13 @@ class CardRequestInfo extends React.PureComponent{
   }
 
   render(){
-    if(this.state.fontLoaded){
+    if(this.props.isVisible && this.state.fontLoaded){
+      this.state.date= (this.props.item.startTime).split("T")[0];
+      this.state.start= (this.props.item.startTime).split("T")[1].split(".")[0];
+      this.state.end= (this.props.item.endTime).split("T")[1].split(".")[0];
+      if(this.props.item.sectionalID == 1){
+        this.state.sectional = 'Sede principal';
+      }
       return (
         <View style={{ flex: 1 }}>
           <Modal
@@ -48,28 +59,46 @@ class CardRequestInfo extends React.PureComponent{
               <View style={{flexDirection:'row'}}>
                 <Text style={styles.textStyle}> Bloque: </Text>
                 <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.blockID} </Text>
-                <Text style={styles.textStyle}>Aula: </Text>
+              </View>
+              <View style={{flexDirection:'row'}}>
+                <Text style={styles.textStyle}> Aula: </Text>
                 <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.roomID} </Text>
               </View>
               <View style={{flexDirection:'row'}}>
                 <Text style={styles.textStyle}> Tipo: </Text>
-                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.requestType} </Text>
+                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.request_type.type} </Text>
               </View>
               <View style={{flexDirection:'row'}}>
                 <Text style={styles.textStyle}> Seccional: </Text>
-                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.sectionalID} </Text>
+                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.state.sectional} </Text>
               </View>
               <View style={{flexDirection:'row'}}>
                 <Text style={styles.textStyle}> Estado: </Text>
-                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.stateID} </Text>
+                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.props.item.request_state.state} </Text>
               </View>
-              <View style={{paddingTop:20}}>
-                <TouchableOpacity style={[styles.textStyleOption]} onPress={this.onPressRequest.bind(this)}>
+              <View style={{flexDirection:'row'}}>
+                <Text style={styles.textStyle}> Fecha: </Text>
+                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.state.date} </Text>
+              </View>
+              <View style={{flexDirection:'row'}}>
+                <Text style={styles.textStyle}> Hora inicial: </Text>
+                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.state.start} </Text>
+              </View>
+              <View style={{flexDirection:'row'}}>
+                <Text style={styles.textStyle}> Hora final: </Text>
+                <Text style={[styles.textStyle, {fontFamily: 'RalewayRegular'}]}> {this.state.end} </Text>
+              </View>
+              <View>
+              <View style={{marginTop:20, flexDirection: 'row', backgroundColor: Colors.secondaryColor}}>
+                {renderif(this.props.item.stateID === 1,
+                  <TouchableOpacity style={[styles.textStyleOption, {alignItems:'flex-start', backgroundColor: 'red'}]} onPress={this.onPressRequest.bind(this)}>
                   <Text style={{color: Colors.whiteColor, fontSize:18, fontFamily: 'RalewayRegular'}}> Cancelar solicitud </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.textStyleOption]}  onPress={this.onPressCancel.bind(this)}>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity style={[styles.textStyleOption, {alignItems:'center'}]}  onPress={this.onPressCancel.bind(this)}>
                   <Text style={{color: Colors.whiteColor, fontSize:18, fontFamily: 'RalewayRegular'}}> Atras </Text>
                 </TouchableOpacity>
+              </View>
               </View>
             </View>
           </Modal>
@@ -77,7 +106,7 @@ class CardRequestInfo extends React.PureComponent{
       );
     }else{
       return(
-        <Loader loader={true} />
+        <View/>
       );
     }
   }
@@ -104,11 +133,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   textStyleOption: {
-    alignItems: 'center',
-    justifyContent:'center',
-    borderTopColor: Colors.primaryColor,
-    borderTopWidth: 1,
-    backgroundColor:Colors.secondaryColor,
+    justifyContent: 'center',
     height:40,
+    flex: 1,
   },
 });

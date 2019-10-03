@@ -34,11 +34,6 @@ export default class Card extends React.PureComponent {
         sectional: 'Sede principal',
       });
     }
-    if(this.props.item.type == 1){
-      this.setState({
-        type: 'Aula',
-      });
-    }
     this.setState({
       fontLoaded:true,
     });

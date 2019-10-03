@@ -21,7 +21,7 @@ export default class ActiveScreen extends Component<{}> {
 
 
   sendBackEndToken = idToken => {
-    fetch('https://integrador-jsd-backend.herokuapp.com/login', {
+    fetch('https://integrador-jsd-backend-dev.herokuapp.com/login', {
       method: 'POST',
       mode: 'no-cors',
       headers: new Headers({
