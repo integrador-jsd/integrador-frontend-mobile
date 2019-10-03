@@ -93,7 +93,7 @@ export default class ScheduleScreen extends Component {
   loadSchedule(){
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
       var userName = this.state.user.data.username;
-      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/users/'+userName+'/turns/?format=calendar';
+      const url = 'https://integrador-jsd-backend-dev.herokuapp.com/api/v1/users/'+userName+'/turns/?format=calendar';
       fetch(url, {
         method: 'GET',
         headers: new Headers({

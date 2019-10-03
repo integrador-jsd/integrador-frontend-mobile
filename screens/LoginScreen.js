@@ -70,6 +70,7 @@ export default class LoginScreen extends React.Component {
   storeData = async (user) => {
   try {
     await AsyncStorage.setItem('user', JSON.stringify(user));
+    global.userType = user.data.userType;
   } catch (error) {
     // Error saving data
   }
