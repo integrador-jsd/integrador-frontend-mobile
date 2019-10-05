@@ -62,11 +62,6 @@ export default class HistoryScreen extends Component<{}> {
     this.setState({
       isVisible: false,
     });
-    if(status){
-      console.log('cancelada');
-    }else{
-      console.log('no hizo nada');
-    }
   }
 
   preRequest (room){

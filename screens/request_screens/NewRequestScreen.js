@@ -65,7 +65,7 @@ class NewRequestScreen extends React.PureComponent{
       loader: true,
     });
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-      const url = 'https://integrador-jsd-backend-dev.herokuapp.com/api/v1/sectionals/1/blocks/19/rooms';
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/sectionals/1/blocks/19/rooms';
       fetch(url, {
         method: 'GET',
         headers: new Headers({
@@ -120,7 +120,7 @@ class NewRequestScreen extends React.PureComponent{
       loader: true,
     });
     firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
-      const url = 'https://integrador-jsd-backend-dev.herokuapp.com/api/v1/requests';
+      const url = 'https://integrador-jsd-backend.herokuapp.com/api/v1/requests';
       fetch(url, {
         method: 'POST',
         headers: new Headers({
