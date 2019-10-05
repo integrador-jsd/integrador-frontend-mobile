@@ -5,6 +5,7 @@ import CardRequest from '../../components/CardRequest';
 import Colors from '../../constants/Colors';
 import CardRequestInfo from '../../components/CardRequestInfo';
 import firebase from 'firebase';
+import Loader from '../../components/Loader';
 
 export default class ActiveScreen extends Component<{}> {
   state = {
@@ -13,6 +14,7 @@ export default class ActiveScreen extends Component<{}> {
     isVisible: false,
     item: {},
     update: true,
+    loader: false,
   }
 
   async componentDidMount(){
@@ -34,6 +36,7 @@ export default class ActiveScreen extends Component<{}> {
         .then((responseJson) => {
             if(responseJson.message){
               this.setState({
+                items: [],
                 update: false,
               });
             }else{
@@ -70,6 +73,9 @@ export default class ActiveScreen extends Component<{}> {
       isVisible: false,
     });
     if(status){
+      this.setState({
+        loader: true,
+      });
       firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
         var userName = this.state.item.createdBy;
         const url = 'https://integrador-jsd-backend-dev.herokuapp.com/api/v1/requests/'+this.state.item.id;
@@ -85,6 +91,9 @@ export default class ActiveScreen extends Component<{}> {
         }).then((response) => response.json())
           .then((responseJson) => {
               this.getUserRequest();
+              this.setState({
+                loader: false,
+              })
             })
       }.bind(this));
     }
@@ -109,6 +118,7 @@ export default class ActiveScreen extends Component<{}> {
             onRefresh = {this.loadMore}
             />
           <CardRequestInfo callback={this.callBackCard.bind(this)} isVisible={this.state.isVisible} item={this.state.item} />
+          <Loader loader={this.state.loader}/>
           <FloatingButton/>
         </View>
       );

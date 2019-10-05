@@ -3,14 +3,16 @@ import {
   Text,
   View,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Colors from '../../constants/Colors';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import firebase from 'firebase';
-import Loader from '../../components/Loader';
+import ScheduleInfo from '../../components/CardScheduleInfo';
 
 export default class ScheduleScreen extends Component {
   constructor(props) {
@@ -20,6 +22,8 @@ export default class ScheduleScreen extends Component {
       currentDate: '',
       fontLoaded:false,
       user: [],
+      info: false,
+      item: [],
     };
   }
 
@@ -80,11 +84,14 @@ export default class ScheduleScreen extends Component {
             futureScrollRange={2}
             scrollEnabled={true}
           />
+          <View>
+            <ScheduleInfo callback={this.scheduleInfo.bind(this)} isVisible={this.state.info} item={this.state.item} />
+          </View>
         </View>
       );
     }else{
       return(
-        <Loader loader={true}/>
+        <View/>
       );
     }
   }
@@ -138,12 +145,19 @@ export default class ScheduleScreen extends Component {
 
   renderItem(item) {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={() => this.scheduleInfo(item)}>
         <Text style={[styles.text, {color:Colors.whiteColor}]}>Encargado: {item.assistant}</Text>
         <Text style={[styles.text, {color:Colors.whiteColor}]}>Sector: {item.section.name}</Text>
         <Text style={[styles.text, {color:Colors.whiteColor}]}>Horario: {item.start} - {item.end}</Text>
-      </View>
+      </TouchableOpacity>
     );
+  }
+
+  scheduleInfo(item){
+    this.setState({
+      item: item,
+      info: !this.state.info,
+    });
   }
 
   renderEmptyDate() {

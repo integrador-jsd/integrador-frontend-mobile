@@ -5,7 +5,7 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 import ProfileScreen from '../screens/main_screens/ProfileScreen';
 import ScheduleScreen from '../screens/main_screens/ScheduleScreen';
-import RequestScreen from '../screens/main_screens/RequestScreen';
+import RequestScreen from '../screens/main_screens/RequestAuxScreen';
 import Colors from '../constants/Colors';
 
 const config = Platform.select({

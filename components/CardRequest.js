@@ -55,20 +55,20 @@ export default class Card extends React.PureComponent {
             <Text style={[styles.cardType,]}> {this.props.item.roomID} </Text>
           </View>
           <View style={{flexDirection:'row'}}>
-          <Text style={styles.cardTitle}> Tipo: </Text>
-          <Text style={styles.cardType}> {this.props.item.request_type.type} </Text>
+            <Text style={styles.cardTitle}> Tipo: </Text>
+            <Text style={styles.cardType}> {this.props.item.request_type.type} </Text>
           </View>
           <View style={{flexDirection:'row'}}>
-          <Text style={styles.cardTitle}> Seccional: </Text>
-          <Text style={styles.cardType}> {this.props.item.sectionalID} </Text>
+            <Text style={styles.cardTitle}> Seccional: </Text>
+            <Text style={styles.cardType}> {this.props.item.sectionalID} </Text>
           </View>
           <View style={{flexDirection:'row'}}>
-          <Text style={styles.cardTitle}> Estado: </Text>
-          <Text style={styles.cardType}> {this.props.item.request_state.state} </Text>
+            <Text style={styles.cardTitle}> Estado: </Text>
+            <Text style={styles.cardType}> {this.props.item.request_state.state} </Text>
           </View>
           <View style={{flexDirection:'row'}}>
-          <Text style={styles.cardTitle}> Fecha: </Text>
-          <Text style={styles.cardType}> {this.state.date} </Text>
+            <Text style={styles.cardTitle}> Fecha: </Text>
+            <Text style={styles.cardType}> {this.state.date} </Text>
           </View>
           <Text style={styles.cardAbout}> click para mas informacion </Text>
         </TouchableOpacity>

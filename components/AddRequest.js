@@ -93,6 +93,7 @@ class AddRequest extends React.PureComponent{
               <View>
                 <Text style={[styles.titleText, {fontSize: 20, paddingTop: 20, paddingBottom: 10}]}> Selecciona los items que necesites: </Text>
                 <FlatList
+                  numColumns = {2}
                   style={{marginTop:1}}
                   data={this.state.allItems}
                   keyExtractor={(item, index) => index.toString()}
