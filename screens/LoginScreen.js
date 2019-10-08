@@ -8,6 +8,7 @@ import firebaseConfig from './config';
 import Colors from '../constants/Colors';
 import * as Font from 'expo-font';
 import * as AppAuth from 'expo-app-auth';
+import Loader from '../components/Loader';
 firebase.initializeApp(firebaseConfig);
 
 
@@ -17,13 +18,18 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       entering:false,
+      fontLoaded: false,
     };
   }
 
   async componentDidMount() {
     await Font.loadAsync({
       'RalewayRegular': require('../assets/fonts/Raleway-Regular.ttf'),
+      'RalewayBold': require('../assets/fonts/Raleway-Bold.ttf'),
     });
+    this.setState({
+      fontLoaded: true
+    })
   }
 
   isUserEqual = (googleUser, firebaseUser) => {
@@ -110,18 +116,28 @@ export default class LoginScreen extends React.Component {
     }
   }
   render() {
-    if(!this.state.entering){
+    if(this.state.fontLoaded){
       return(
-        <View style = {styles.container}>
-          <TouchableOpacity style={styles.googleStyle} activeOpacity={0.5}
-            onPress={this.signInWithGoogleAsync}>
-           <Image
-            source={require('../assets/images/google.png')}
-            style={styles.imageIconStyle}/>
-           <View style={styles.separatorLine} />
-           <Text style={styles.textStyle}> Entrar usando Google </Text>
-
-         </TouchableOpacity>
+        <View style={styles.container}>
+          <View style={[styles.container, {flex: 0.7}]}>
+            <Text style={styles.welcomeText}>Bienvenido a UdeAulas</Text>
+            <Image
+              source={require('../assets/images/logo.png')}
+              style={{height: 400, width: 400}}
+            />
+          </View>
+          <View style = {[styles.container, {flex: 0.3, backgroundColor: Colors.secondaryColor, marginTop: 50}]}>
+            <View style={[styles.separatorLine, {backgroundColor:Colors.primaryColor, height: 3, width: '100%'}]} />
+            <TouchableOpacity style={styles.googleStyle} activeOpacity={0.5}
+              onPress={this.signInWithGoogleAsync}>
+             <Image
+              source={require('../assets/images/google.png')}
+              style={styles.imageIconStyle}/>
+             <View style={styles.separatorLine} />
+             <Text style={styles.textStyle}> Entrar usando Google </Text>
+           </TouchableOpacity>
+          </View>
+          <Loader loader={this.state.entering} />
         </View>
       );
     }else{
@@ -144,23 +160,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems:'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.secondaryColor,
+    backgroundColor: Colors.complementaryColor,
+    width: '100%'
   },
   googleStyle: {
    flexDirection: 'row',
    alignItems: 'center',
+   marginTop: 60,
    backgroundColor: Colors.primaryColor,
-   borderWidth: .5,
-   borderColor: '#fff',
+   borderWidth: 1.2,
+   borderColor: Colors.whiteColor,
    height: 40,
    borderRadius: 5 ,
    margin: 5,
  },
  separatorLine :{
-  backgroundColor : Colors.secondaryColor,
+  backgroundColor : Colors.whiteColor,
   width: 1,
-  height: 40
+  height: 40,
 },
 imageIconStyle: {
    padding: 10,
@@ -172,6 +189,12 @@ imageIconStyle: {
 textStyle: {
   fontFamily: 'RalewayRegular',
   color: Colors.whiteColor,
+},
+welcomeText: {
+  fontSize: 30,
+  color: Colors.primaryColor,
+  fontFamily: 'RalewayBold',
+  marginTop:30,
 }
 
 });

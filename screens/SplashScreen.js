@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, ActivityIndicator, AsyncStorage,
+  View, Text, StyleSheet, ActivityIndicator, AsyncStorage, Image
 } from 'react-native';
 import firebase from 'firebase';
 import { NavigationActions, StackActions } from 'react-navigation';
@@ -9,6 +9,10 @@ import { NavigationActions, StackActions } from 'react-navigation';
 
 
 class SplashScreen extends React.Component {
+
+  state={
+    login: false,
+  }
 
   componentDidMount(){
     this.checkIfLoggedIn();
@@ -32,21 +36,34 @@ class SplashScreen extends React.Component {
         }
         this.props.navigation.dispatch(resetAction);
       }else{
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Login' })],
-        });
-        this.props.navigation.dispatch(resetAction);
+        this.setState({
+          login:true,
+        })
+        setTimeout(() => {
+          const resetAction = StackActions.reset({
+              index: 0,
+              actions: [NavigationActions.navigate({ routeName: 'Login' })],
+          });
+          this.props.navigation.dispatch(resetAction);
+        }, 2500);
       }
     }.bind(this));
   }
 
   render() {
-    return(
-      <View style = {styles.container}>
-        <ActivityIndicator size="large"/>
-      </View>
-    );
+    if(this.state.login){
+      return(
+        <View style = {styles.container}>
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={{height: 400, width: 400}}
+          />
+        </View>
+      );
+    }else{
+      return null;
+    }
+
   }
 }
 
